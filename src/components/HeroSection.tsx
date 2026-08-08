@@ -147,11 +147,11 @@ function VerticalChain() {
             <stop offset="100%" stopColor="#7A5010" />
           </linearGradient>
 
-          {/* Cold brushed steel for upcoming */}
+          {/* Upcoming links — uses CSS vars so light/dark mode both look correct */}
           <linearGradient id="v-steel" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%"   stopColor="#2E3450" />
-            <stop offset="50%"  stopColor="#252840" />
-            <stop offset="100%" stopColor="#1A1D30" />
+            <stop offset="0%"   style={{ stopColor: 'var(--chain-upcoming-a)' }} />
+            <stop offset="50%"  style={{ stopColor: 'var(--chain-upcoming-b)' }} />
+            <stop offset="100%" style={{ stopColor: 'var(--chain-upcoming-b)' }} />
           </linearGradient>
 
           {/* Completed: warm amber bloom */}
@@ -314,8 +314,8 @@ function HorizontalChain() {
           <stop offset="100%" stopColor="#7A4810" />
         </linearGradient>
         <linearGradient id="h-steel" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%"   stopColor="#2E3450" />
-          <stop offset="100%" stopColor="#1A1D30" />
+          <stop offset="0%"   style={{ stopColor: 'var(--chain-upcoming-a)' }} />
+          <stop offset="100%" style={{ stopColor: 'var(--chain-upcoming-b)' }} />
         </linearGradient>
         <filter id="h-glow" x="-60%" y="-60%" width="220%" height="220%">
           <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />

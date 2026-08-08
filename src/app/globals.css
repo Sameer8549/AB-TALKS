@@ -2,11 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── CSS Custom Properties (mirrors tailwind.config.js tokens) ──────────────
-   Used for dynamic values that Tailwind can't handle (e.g. inline styles,
-   JS-driven values, CSS-only animations with opacity calc).
-──────────────────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   THEME TOKENS
+   Both themes use `rgb(R G B / alpha)` channels so Tailwind opacity
+   modifiers (bg-signal/10, text-ash/40, etc.) work in both modes.
+   Dark is the default (:root). Light is applied via html.light class.
+═══════════════════════════════════════════════════════════════════════════ */
+
 :root {
+  /* ── Surface channels (dark) ─────────────────────────────── */
+  --c-ink:         12 14 20;      /* #0C0E14 — the late-night screen */
+  --c-coal:        19 21 31;      /* #13151F — card surface */
+  --c-graphite:    30 33 51;      /* #1E2133 — elevated surface */
+  --c-rim:         42 45 66;      /* #2A2D42 — borders, hairlines */
+  /* ── Text channels (dark) ───────────────────────────────── */
+  --c-ash:         107 113 145;   /* #6B7191 — muted / secondary */
+  --c-chalk:       221 225 234;   /* #DDE1EA — primary body text */
+  /* ── Accent channels (both modes) ───────────────────────── */
+  --c-signal:      244 185 66;    /* #F4B942 — amber streak */
+  --c-signal-dim:  196 144 48;    /* #C49030 — recovered / dimmed */
+
+  /* ── Hex fallbacks for inline SVG / style="" usage ───────── */
   --ink:          #0C0E14;
   --coal:         #13151F;
   --graphite:     #1E2133;
@@ -17,9 +33,61 @@
   --signal-dim:   #C49030;
   --signal-faint: rgba(244, 185, 66, 0.08);
   --signal-glow:  rgba(244, 185, 66, 0.25);
+
+  /* ── SVG chain upcoming links ────────────────────────────── */
+  --chain-upcoming-a: #2E3450;
+  --chain-upcoming-b: #1A1D30;
+  --chain-connector-hot: rgba(196, 120, 32, 0.8);
+  --chain-connector-cold: rgba(42, 45, 66, 0.7);
 }
 
-/* ─── Base Reset & Defaults ──────────────────────────────────────────────── */
+/* ── Light mode overrides ──────────────────────────────────────────────── */
+html.light {
+  /*
+   * Dim slate — deliberately NOT white.
+   * Think: a monitor at 50% brightness, or graphite paper.
+   * Background sits around 67% luminance — grey enough to read as "dim light",
+   * bright enough to be clearly different from dark mode.
+   */
+  --c-ink:         210 212 222;   /* #D2D4DE — cool grey slate */
+  --c-coal:        218 220 230;   /* #DADCE6 — slightly lighter surface */
+  --c-graphite:    226 228 236;   /* #E2E4EC — elevated surface */
+  --c-rim:         174 176 192;   /* #AEB0C0 — borders visible on this bg */
+  --c-ash:         90 92 122;     /* #5A5C7A — muted text (4.4:1 contrast) */
+  --c-chalk:       10 12 24;      /* #0A0C18 — near-black text (13.5:1 contrast) */
+  --c-signal:      139 90 2;      /* #8B5A02 — dark amber (7.1:1 contrast on slate) */
+  --c-signal-dim:  115 74 1;      /* #734A01 */
+
+  /* Hex fallbacks for inline SVG / style="" */
+  --ink:          #D2D4DE;
+  --coal:         #DADCE6;
+  --graphite:     #E2E4EC;
+  --rim:          #AEB0C0;
+  --ash:          #5A5C7A;
+  --chalk:        #0A0C18;
+  --signal:       #8B5A02;
+  --signal-dim:   #734A01;
+  --signal-faint: rgba(139, 90, 2, 0.08);
+  --signal-glow:  rgba(139, 90, 2, 0.20);
+
+  /* SVG chain: upcoming links = slightly darker than the grey background */
+  --chain-upcoming-a: #B4B6C6;
+  --chain-upcoming-b: #A4A6B6;
+  --chain-connector-hot: rgba(139, 90, 2, 0.6);
+  --chain-connector-cold: rgba(155, 158, 178, 0.7);
+}
+
+/* ── Dim-light body background ───────────────────────────────────────────── */
+html.light body {
+  background:
+    radial-gradient(ellipse 50% 80% at 88% 45%, rgba(139,90,2,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 70% at 10% 20%, #C8CAD6 0%, #D2D4DE 60%);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE RESET
+═══════════════════════════════════════════════════════════════════════════ */
+
 *,
 *::before,
 *::after {
@@ -29,19 +97,16 @@
 }
 
 html {
-  /* Prevent font boosting on mobile */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  /* Smooth scrolling — respects prefers-reduced-motion below */
   scroll-behavior: smooth;
 }
 
 body {
   /*
-   * Not flat black. A canvas with two light sources:
-   *   1. Cool blue-ink depth from top-left (the "screen glow")
-   *   2. Faint warm amber on the right (the chain's own heat)
-   * Together they make the dark feel like a space, not a void.
+   * Dark canvas with two light sources:
+   *   1. Cool depth from top-left (screen glow)
+   *   2. Faint amber tint on the right (chain's own heat)
    */
   background:
     radial-gradient(ellipse 50% 80% at 88% 45%, rgba(184, 115, 18, 0.05) 0%, transparent 65%),
@@ -53,11 +118,12 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Prevent horizontal scroll from overflow bugs on mobile */
   overflow-x: hidden;
+  /* Smooth theme transition — surfaces and text, not background */
+  transition: color 0.25s ease, border-color 0.25s ease;
 }
 
-/* ─── Typography Defaults ────────────────────────────────────────────────── */
+/* ── Typography Defaults ─────────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-space-grotesk), system-ui, sans-serif;
   font-weight: 700;
@@ -76,64 +142,39 @@ a {
   text-decoration: none;
 }
 
-/* ─── Scrollbar — minimal, on-brand ──────────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-::-webkit-scrollbar-track {
-  background: var(--ink);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--rim);
-  border-radius: 999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--ash);
-}
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 4px; height: 4px; }
+::-webkit-scrollbar-track  { background: var(--ink); }
+::-webkit-scrollbar-thumb  { background: var(--rim); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ash); }
 
-/* ─── Focus Ring — visible but on-brand ──────────────────────────────────── */
+/* ── Focus ring ──────────────────────────────────────────────────────────── */
 :focus-visible {
   outline: 2px solid var(--signal);
   outline-offset: 3px;
   border-radius: 4px;
 }
 
-/* ─── Selection ──────────────────────────────────────────────────────────── */
+/* ── Selection ───────────────────────────────────────────────────────────── */
 ::selection {
   background: var(--signal-glow);
   color: var(--chalk);
 }
 
-/* ─── Reduced Motion ─────────────────────────────────────────────────────── */
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
 
-/* ─── Utility: Hide scrollbar but keep scroll ────────────────────────────── */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+/* ── Utilities ───────────────────────────────────────────────────────────── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* ─── Utility: Signal glow — amber ambient shadow ─────────────────────────  */
 .signal-shadow {
   box-shadow: 0 0 0 1px var(--signal-glow), 0 0 24px var(--signal-faint);
-}
-
-/* ─── Utility: Hairline border using rim color ───────────────────────────── */
-.border-rim {
-  border-color: var(--rim);
 }

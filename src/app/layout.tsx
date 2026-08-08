@@ -70,8 +70,28 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${spaceGrotesk.variable} ${outfit.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
     >
-      <body className="font-body bg-ink text-chalk antialiased">
+      <head>
+        {/*
+         * Flash-prevention: runs synchronously before first paint.
+         * Reads localStorage and applies 'light' class to <html>
+         * BEFORE React hydrates — zero theme flash.
+         */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(){
+                try {
+                  var t = localStorage.getItem('ab-theme');
+                  if (t === 'light') document.documentElement.classList.add('light');
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="font-body antialiased">
         {children}
       </body>
     </html>

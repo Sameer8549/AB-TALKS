@@ -280,10 +280,7 @@ export default function DashboardPage() {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
 
             {/* Avatar */}
-            <div
-              className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden flex-shrink-0 ring-2"
-              style={{ ringColor: 'var(--signal-glow)' }}
-            >
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-signal/30 ring-offset-1 ring-offset-coal">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={student.avatar}

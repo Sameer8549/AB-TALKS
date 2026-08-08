@@ -27,8 +27,8 @@ export interface DayTask {
   // What to build — structured requirements for /day/[id]
   requirements: string[]
   // Proof of work (populated when status is completed/recovered)
-  githubLink?: string
-  linkedinLink?: string
+  githubUrl?: string
+  linkedinUrl?: string
   submittedAt?: string
   // Recovery Grace Window — set when status moves to missed, lasts 24h
   recoveryDeadline?: string  // ISO datetime — if set and in future, recovery is possible
@@ -115,8 +115,8 @@ export const days: DayTask[] = [
       'Deploy a simple HTML page to Vercel',
       'Link your GitHub commit in your LinkedIn post with a short reflection',
     ],
-    githubLink: 'https://github.com/arjunbuilds/day-01-setup',
-    linkedinLink: 'https://linkedin.com/posts/arjunbuilds_day1',
+    githubUrl: 'https://github.com/arjunbuilds/day-01-setup',
+    linkedinUrl: 'https://linkedin.com/posts/arjunbuilds_day1',
     submittedAt: '2026-07-28T22:14:00+05:30',
   },
   {
@@ -136,8 +136,8 @@ export const days: DayTask[] = [
       'Achieve a Lighthouse accessibility score of 90+',
       'Host on GitHub Pages',
     ],
-    githubLink: 'https://github.com/arjunbuilds/day-02-card',
-    linkedinLink: 'https://linkedin.com/posts/arjunbuilds_day2',
+    githubUrl: 'https://github.com/arjunbuilds/day-02-card',
+    linkedinUrl: 'https://linkedin.com/posts/arjunbuilds_day2',
     submittedAt: '2026-07-29T23:01:00+05:30',
   },
   {
@@ -157,8 +157,8 @@ export const days: DayTask[] = [
       'Persist tasks to localStorage so they survive a refresh',
       'No jQuery, no React — pure DOM API only',
     ],
-    githubLink: 'https://github.com/arjunbuilds/day-03-todo',
-    linkedinLink: 'https://linkedin.com/posts/arjunbuilds_day3',
+    githubUrl: 'https://github.com/arjunbuilds/day-03-todo',
+    linkedinUrl: 'https://linkedin.com/posts/arjunbuilds_day3',
     submittedAt: '2026-07-30T21:45:00+05:30',
   },
   {
@@ -178,8 +178,8 @@ export const days: DayTask[] = [
       'Display: avatar, name, bio, followers, public repos',
       'Debounce the search input — no request on every keystroke',
     ],
-    githubLink: 'https://github.com/arjunbuilds/day-04-github-finder',
-    linkedinLink: 'https://linkedin.com/posts/arjunbuilds_day4',
+    githubUrl: 'https://github.com/arjunbuilds/day-04-github-finder',
+    linkedinUrl: 'https://linkedin.com/posts/arjunbuilds_day4',
     submittedAt: '2026-07-31T22:58:00+05:30',
   },
   {
@@ -549,17 +549,91 @@ export const edgeCase_emptyProfile: MockData = {
   achievements: [],
 }
 
+// ─── Rahul Nair — Missed Day student persona ─────────────────────────────────
+// DevOps track, Chennai, 4 days in, missed Day 5, recovery window open
+const studentRahul: StudentProfile = {
+  id: 'stu_rahul_001',
+  name: 'Rahul Nair',
+  handle: '@rahulops',
+  avatar: 'https://avatars.githubusercontent.com/u/7?v=4',
+  college: 'SRM Institute of Science and Technology',
+  city: 'Chennai',
+  track: 'devops',
+  trackLabel: 'DevOps Engineering',
+  startDate: '2026-08-04',
+  github: 'https://github.com/rahulops',
+  linkedin: 'https://linkedin.com/in/rahulops',
+  bio: 'Infrastructure obsessed. CI/CD pipelines by day, Docker containers by night.',
+}
+
+const achievementsRahul: Achievement[] = [
+  {
+    id: 'ach_first_commit',
+    title: 'First Link',
+    description: 'Submitted your very first day.',
+    icon: 'GitCommit',
+    unlockedAt: '2026-08-04',
+  },
+  // All others locked — only 4 days in and one already missed
+  {
+    id: 'ach_week_one',
+    title: 'Week One',
+    description: 'Complete 7 consecutive days.',
+    icon: 'CalendarCheck',
+    unlockedAt: undefined,
+  },
+  {
+    id: 'ach_recovered',
+    title: 'Repaired',
+    description: 'Use a Recovery Grace Window to save your streak.',
+    icon: 'Wrench',
+    unlockedAt: undefined,  // Will unlock if he repairs Day 5
+  },
+  {
+    id: 'ach_hard_done',
+    title: 'Hard Mode',
+    description: 'Complete a day rated Hard difficulty.',
+    icon: 'Fire',
+    unlockedAt: undefined,
+  },
+  {
+    id: 'ach_fullstack',
+    title: 'Full Stack',
+    description: 'Connected frontend to backend — both running live.',
+    icon: 'Stack',
+    unlockedAt: undefined,
+  },
+  {
+    id: 'ach_halfway',
+    title: 'Halfway',
+    description: 'Reach Day 30.',
+    icon: 'Medal',
+    unlockedAt: undefined,
+  },
+  {
+    id: 'ach_no_miss',
+    title: 'Clean Chain',
+    description: 'Complete 30 days with no missed days.',
+    icon: 'Link',
+    unlockedAt: undefined,
+  },
+  {
+    id: 'ach_finisher',
+    title: 'Finisher',
+    description: 'Complete all 60 days.',
+    icon: 'Trophy',
+    unlockedAt: undefined,
+  },
+]
+
 // EDGE CASE 2: Missed day — streak at risk, recovery window active
 export const edgeCase_missedDay: MockData = {
-  student: {
-    ...student,
-    id: 'stu_missed_001',
-  },
+  student: studentRahul,
   streak: {
-    current: 4,          // Days 1-4 before the miss
+    current: 4,
     longest: 4,
     totalCompleted: 4,
-    totalMissed: 1,      // Yesterday's miss
+    totalMissed: 1,
     totalRecovered: 0,
     completionPercent: Math.round((4 / 60) * 100),
     totalDays: 60,
@@ -569,82 +643,122 @@ export const edgeCase_missedDay: MockData = {
       day: 1,
       date: '2026-08-04',
       status: 'completed',
-      title: 'Dev environment setup',
-      briefSummary: 'Set up your local dev environment from scratch.',
-      description: days[0].description,
+      title: 'Linux + Terminal basics',
+      briefSummary: 'Navigate the terminal without a mouse — all day.',
+      description:
+        'Every DevOps engineer lives in the terminal. Today you master basic Linux navigation, file permissions, and write your first Bash script that actually does something useful.',
       difficulty: 'easy',
-      tags: ['setup', 'git', 'vercel'],
-      requirements: days[0].requirements,
-      githubLink: 'https://github.com/arjunbuilds/day-01',
-      linkedinLink: 'https://linkedin.com/posts/arjunbuilds_d1',
-      submittedAt: '2026-08-04T21:00:00+05:30',
+      tags: ['linux', 'bash', 'terminal'],
+      requirements: [
+        'Navigate the full filesystem using only terminal commands',
+        'Create and manage files/dirs with mkdir, touch, cp, mv, rm',
+        'Write a Bash script that auto-creates a project folder structure',
+        'Set file permissions correctly with chmod',
+        'Push your script to a public GitHub repo',
+      ],
+      githubUrl: 'https://github.com/rahulops/day-01-linux',
+      linkedinUrl: 'https://linkedin.com/posts/rahulops_day1',
+      submittedAt: '2026-08-04T21:30:00+05:30',
     },
     {
       day: 2,
       date: '2026-08-05',
       status: 'completed',
-      title: 'HTML + CSS fundamentals',
-      briefSummary: 'Build a personal card component from scratch.',
-      description: days[1].description,
-      difficulty: 'easy',
-      tags: ['html', 'css'],
-      requirements: days[1].requirements,
-      githubLink: 'https://github.com/arjunbuilds/day-02',
-      linkedinLink: 'https://linkedin.com/posts/arjunbuilds_d2',
-      submittedAt: '2026-08-05T22:10:00+05:30',
+      title: 'Docker fundamentals',
+      briefSummary: 'Containerise a Node.js app from scratch.',
+      description:
+        'Containers changed everything. Today you write a Dockerfile, build an image, run a container, and push it to Docker Hub. No Docker Desktop GUI — CLI only.',
+      difficulty: 'medium',
+      tags: ['docker', 'containers', 'node'],
+      requirements: [
+        'Write a production-grade Dockerfile for a Node.js Express app',
+        'Build and tag the image locally',
+        'Run the container and verify it serves on port 3000',
+        'Push the image to Docker Hub',
+        'Document the build and run commands in your README',
+      ],
+      githubUrl: 'https://github.com/rahulops/day-02-docker',
+      linkedinUrl: 'https://linkedin.com/posts/rahulops_day2',
+      submittedAt: '2026-08-05T23:10:00+05:30',
     },
     {
       day: 3,
       date: '2026-08-06',
       status: 'completed',
-      title: 'JavaScript DOM manipulation',
-      briefSummary: 'Build a todo list — no libraries, pure JS.',
-      description: days[2].description,
+      title: 'Git workflows',
+      briefSummary: 'Branch, rebase, and resolve conflicts like a senior.',
+      description:
+        'Git is not just commit and push. Today you work through feature branching, rebasing, cherry-picking, and intentional merge conflicts — then resolve them cleanly.',
       difficulty: 'easy',
-      tags: ['javascript', 'dom'],
-      requirements: days[2].requirements,
-      githubLink: 'https://github.com/arjunbuilds/day-03',
-      linkedinLink: 'https://linkedin.com/posts/arjunbuilds_d3',
-      submittedAt: '2026-08-06T23:00:00+05:30',
+      tags: ['git', 'branching', 'rebase'],
+      requirements: [
+        'Create a feature branch, make changes, then merge back to main',
+        'Rebase a branch onto main — do not use merge',
+        'Intentionally create and then resolve a merge conflict',
+        'Cherry-pick a single commit from one branch to another',
+        'Write a .gitignore that covers Node.js, Python, and OS artifacts',
+      ],
+      githubUrl: 'https://github.com/rahulops/day-03-git',
+      linkedinUrl: 'https://linkedin.com/posts/rahulops_day3',
+      submittedAt: '2026-08-06T22:00:00+05:30',
     },
     {
       day: 4,
       date: '2026-08-07',
       status: 'completed',
-      title: 'Fetch API + REST basics',
-      briefSummary: 'Consume a public API and render the data.',
-      description: days[3].description,
+      title: 'CI with GitHub Actions',
+      briefSummary: 'Write a pipeline that lints, tests, and builds on every push.',
+      description:
+        'CI is the backbone of modern engineering. Today you write a GitHub Actions workflow that runs on every push: lints your code, runs tests, and builds the Docker image.',
       difficulty: 'medium',
-      tags: ['javascript', 'api', 'fetch'],
-      requirements: days[3].requirements,
-      githubLink: 'https://github.com/arjunbuilds/day-04',
-      linkedinLink: 'https://linkedin.com/posts/arjunbuilds_d4',
+      tags: ['ci', 'github-actions', 'yaml'],
+      requirements: [
+        'Create a .github/workflows/ci.yml file from scratch',
+        'Trigger on push to main and on every pull request',
+        'Run ESLint or a linter of your choice',
+        'Run at least one test (even a simple health-check script)',
+        'Build the Docker image and report success/failure',
+      ],
+      githubUrl: 'https://github.com/rahulops/day-04-ci',
+      linkedinUrl: 'https://linkedin.com/posts/rahulops_day4',
       submittedAt: '2026-08-07T22:45:00+05:30',
     },
     {
       day: 5,
       date: '2026-08-08',
-      // MISSED DAY — recovery window is open (expires at midnight Aug 9)
       status: 'missed',
-      title: 'React fundamentals',
-      briefSummary: 'Re-build Day 3\'s todo in React — notice the difference.',
-      description: days[4].description,
+      title: 'Nginx reverse proxy',
+      briefSummary: 'Route traffic through Nginx — no direct port exposure.',
+      description:
+        'Nginx is the front door of the internet. Today you configure it as a reverse proxy, pointing at your Dockerised app, with SSL termination via a self-signed cert.',
       difficulty: 'medium',
-      tags: ['react', 'state', 'components'],
-      requirements: days[4].requirements,
-      // Recovery window — 24h from the end of the missed day
+      tags: ['nginx', 'reverse-proxy', 'ssl'],
+      requirements: [
+        'Install and start Nginx on an EC2 instance or local VM',
+        'Configure a server block that proxies to your Docker app on port 3000',
+        'Generate a self-signed SSL cert and enable HTTPS',
+        'Test with curl — no browser, raw HTTP only',
+        'Document your nginx.conf with comments explaining each directive',
+      ],
       recoveryDeadline: '2026-08-09T23:59:00+05:30',
     },
     {
       day: 6,
       date: '2026-08-09',
       status: 'today',
-      title: 'Tailwind CSS layout',
-      briefSummary: 'Build a responsive nav + hero section.',
-      description: days[5].description,
+      title: 'Docker Compose',
+      briefSummary: 'Orchestrate a multi-container app with one command.',
+      description:
+        'Real apps are never one container. Today you write a docker-compose.yml that runs your Node app, a MongoDB database, and a Redis cache — all networked together.',
       difficulty: 'medium',
-      tags: ['tailwind', 'responsive'],
-      requirements: days[5].requirements,
+      tags: ['docker-compose', 'mongodb', 'redis'],
+      requirements: [
+        'Write a docker-compose.yml with 3 services: app, mongo, redis',
+        'Use named volumes for data persistence',
+        'Define a custom bridge network — no default networking',
+        'Add health checks to the mongo and redis services',
+        'Confirm all services start with docker compose up -d',
+      ],
     },
     ...Array.from({ length: 54 }, (_, i) => ({
       day: i + 7,
@@ -658,9 +772,7 @@ export const edgeCase_missedDay: MockData = {
       requirements: [],
     })),
   ],
-  achievements: [
-    achievements[0], // First Link
-  ],
+  achievements: achievementsRahul,
 }
 
 // EDGE CASE 3: Zero streak — first day of the challenge

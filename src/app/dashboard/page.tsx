@@ -8,7 +8,7 @@ import StreakCard from '@/components/StreakCard'
 import { ACH_ICONS } from '@/components/AchievementIcons'
 import {
   student as normalStudent, streak as normalStreak,
-  days as normalDays, achievements,
+  days as normalDays, achievements as normalAchievements,
   edgeCase_emptyProfile, edgeCase_missedDay,
 } from '@/data/mockData'
 import type { Achievement, DayTask } from '@/data/mockData'
@@ -16,10 +16,15 @@ import type { Achievement, DayTask } from '@/data/mockData'
 // ─── Demo state ───────────────────────────────────────────────────────────────
 type DemoState = 'normal' | 'new' | 'missed'
 
-const DATA_SOURCES: Record<DemoState, { student: typeof normalStudent; streak: typeof normalStreak; days: typeof normalDays }> = {
-  normal: { student: normalStudent, streak: normalStreak, days: normalDays },
-  new:    { student: edgeCase_emptyProfile.student, streak: edgeCase_emptyProfile.streak, days: edgeCase_emptyProfile.days },
-  missed: { student: edgeCase_missedDay.student,    streak: edgeCase_missedDay.streak,    days: edgeCase_missedDay.days },
+const DATA_SOURCES: Record<DemoState, {
+  student: typeof normalStudent
+  streak: typeof normalStreak
+  days: typeof normalDays
+  achievements: Achievement[]
+}> = {
+  normal: { student: normalStudent, streak: normalStreak, days: normalDays, achievements: normalAchievements },
+  new:    { student: edgeCase_emptyProfile.student, streak: edgeCase_emptyProfile.streak, days: edgeCase_emptyProfile.days, achievements: edgeCase_emptyProfile.achievements },
+  missed: { student: edgeCase_missedDay.student,    streak: edgeCase_missedDay.streak,    days: edgeCase_missedDay.days,    achievements: edgeCase_missedDay.achievements },
 }
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
@@ -359,7 +364,7 @@ export default function DashboardPage() {
   const repairRef = { current: null as HTMLDivElement | null }
 
   // Data source — switches with demo state
-  const { student, streak, days } = DATA_SOURCES[demoState]
+  const { student, streak, days, achievements } = DATA_SOURCES[demoState]
 
   const todayTask    = days.find(d => d.status === 'today')
   const missedDay    = days.find(d => d.status === 'missed' && !!d.recoveryDeadline)
@@ -367,7 +372,11 @@ export default function DashboardPage() {
   const upcomingDays = days.filter(d => d.status === 'upcoming').slice(0, 3)
 
   const isNewStudent = streak.current === 0
-  const hasMissedDay = !!missedDay && !!useCountdown(missedDay?.recoveryDeadline)
+
+  // ⚠️ Always call hooks unconditionally — Rules of Hooks
+  // useCountdown must fire every render regardless of missedDay state
+  const recoveryTimeLeft = useCountdown(missedDay?.recoveryDeadline)
+  const hasMissedDay = !!missedDay && !!recoveryTimeLeft
 
   // Count-up animations
   const streakCount  = useCountUp(streak.current, 0.55, 1.1)
@@ -742,10 +751,19 @@ export default function DashboardPage() {
                 {achievements.filter(a => a.unlockedAt).length}/{achievements.length}
               </span>
             </div>
-            <div className="p-3 grid grid-cols-4 gap-2">
-              {achievements.map((a, i) => <AchBadge key={a.id} ach={a} i={i} />)}
-            </div>
+            {achievements.length > 0 ? (
+              <div className="p-3 grid grid-cols-4 gap-2">
+                {achievements.map((a, i) => <AchBadge key={a.id} ach={a} i={i} />)}
+              </div>
+            ) : (
+              <div className="px-4 py-5 flex flex-col items-center gap-2 text-center">
+                <p className="font-mono text-ash/50" style={{ fontSize: 10, letterSpacing: '0.1em' }}>
+                  Submit your first day to unlock achievements.
+                </p>
+              </div>
+            )}
           </motion.div>
+
 
           {/* Upcoming */}
           {upcomingDays.length > 0 && (

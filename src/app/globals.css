@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Custom Properties (mirrors tailwind.config.js tokens) ──────────────
+   Used for dynamic values that Tailwind can't handle (e.g. inline styles,
+   JS-driven values, CSS-only animations with opacity calc).
+──────────────────────────────────────────────────────────────────────────── */
+:root {
+  --ink:          #0C0E14;
+  --coal:         #13151F;
+  --graphite:     #1E2133;
+  --rim:          #2A2D42;
+  --ash:          #6B7191;
+  --chalk:        #DDE1EA;
+  --signal:       #F4B942;
+  --signal-dim:   #C49030;
+  --signal-faint: rgba(244, 185, 66, 0.08);
+  --signal-glow:  rgba(244, 185, 66, 0.25);
+}
+
+/* ─── Base Reset & Defaults ──────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* Prevent font boosting on mobile */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Smooth scrolling — respects prefers-reduced-motion below */
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--ink);
+  color: var(--chalk);
+  font-family: var(--font-outfit), system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent horizontal scroll from overflow bugs on mobile */
+  overflow-x: hidden;
+}
+
+/* ─── Typography Defaults ────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-space-grotesk), system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--chalk);
+}
+
+p {
+  color: var(--chalk);
+  line-height: 1.65;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ─── Scrollbar — minimal, on-brand ──────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ink);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--rim);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ash);
+}
+
+/* ─── Focus Ring — visible but on-brand ──────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+::selection {
+  background: var(--signal-glow);
+  color: var(--chalk);
+}
+
+/* ─── Reduced Motion ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Utility: Hide scrollbar but keep scroll ────────────────────────────── */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ─── Utility: Signal glow — amber ambient shadow ─────────────────────────  */
+.signal-shadow {
+  box-shadow: 0 0 0 1px var(--signal-glow), 0 0 24px var(--signal-faint);
+}
+
+/* ─── Utility: Hairline border using rim color ───────────────────────────── */
+.border-rim {
+  border-color: var(--rim);
+}

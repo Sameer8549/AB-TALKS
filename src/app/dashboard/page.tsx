@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import Link from 'next/link'
 import NavBar from '@/components/NavBar'
 import StreakCard from '@/components/StreakCard'
+import { ACH_ICONS } from '@/components/AchievementIcons'
 import { student, streak, days, achievements } from '@/data/mockData'
 import type { Achievement } from '@/data/mockData'
 
@@ -146,38 +147,28 @@ function SubmitForm() {
 }
 
 // ─── Achievement badge ────────────────────────────────────────────────────────
-const ICONS: Record<string, React.ReactNode> = {
-  GitCommit: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2"/><path d="M2 12h6M16 12h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>,
-  CalendarCheck: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor" strokeWidth="2"/><path d="M8 2v4M16 2v4M3 10h18M9 15l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-  Wrench: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-  Fire: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2C12 2 7 6 7 12a5 5 0 0010 0c0-2-.5-3.5-2-5 0 0 .5 2-1 3.5-1-1-2-3.5-2-5.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-  Stack: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-  Medal: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="15" r="6" stroke="currentColor" strokeWidth="2"/><path d="M8.21 3h7.58L19 9H5L8.21 3z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/></svg>,
-  Link: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>,
-  Trophy: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 2h12v8a6 6 0 01-12 0V2z" stroke="currentColor" strokeWidth="2"/><path d="M6 4H3a2 2 0 00-2 2v2a4 4 0 004 4M18 4h3a2 2 0 012 2v2a4 4 0 01-4 4M12 16v4M9 20h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>,
-}
-
 function AchBadge({ ach, i }: { ach: Achievement; i: number }) {
   const on = !!ach.unlockedAt
+  const Icon = ACH_ICONS[ach.icon]
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.85 }}
+      initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: 0.35 + i * 0.05, duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+      transition={{ delay: 0.35 + i * 0.06, duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
+      whileHover={on ? { scale: 1.06 } : {}}
       title={ach.description}
       className="rounded-card p-2.5 flex flex-col items-center gap-1.5 text-center"
       style={{
         background: on ? 'var(--graphite)' : 'var(--coal)',
-        border: `1px solid ${on ? 'var(--rim)' : 'var(--rim)'}`,
-        opacity: on ? 1 : 0.38,
-        boxShadow: on ? '0 0 0 1px var(--signal-faint)' : 'none',
-        cursor: 'default',
+        border: `1px solid ${on ? 'rgba(244,185,66,0.25)' : 'var(--rim)'}`,
+        boxShadow: on ? '0 0 12px rgba(244,185,66,0.08)' : 'none',
+        cursor: on ? 'pointer' : 'default',
+        transition: 'box-shadow 0.2s ease',
       }}
     >
-      <span style={{ color: on ? 'var(--signal)' : 'var(--ash)' }}>
-        {ICONS[ach.icon] ?? '◆'}
-      </span>
-      <p className="font-mono text-chalk leading-none" style={{ fontSize: 8.5, letterSpacing: '0.04em' }}>
+      {Icon ? <Icon active={on} size={38} /> : <span style={{ fontSize: 20 }}>◆</span>}
+      <p className="font-mono leading-none"
+        style={{ fontSize: 8, letterSpacing: '0.04em', color: on ? 'var(--chalk)' : 'var(--ash)' }}>
         {ach.title}
       </p>
     </motion.div>

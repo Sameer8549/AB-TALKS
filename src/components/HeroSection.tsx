@@ -374,13 +374,12 @@ export default function HeroSection() {
   return (
     <section className="min-h-[100dvh] pt-16 flex items-center relative overflow-hidden">
 
-      {/* Chain's own light source — a warm amber radial halo on the right */}
+      {/* Chain's own light source — adapts to theme via CSS var */}
       <div
         className="hidden sm:block absolute top-0 right-0 bottom-0 pointer-events-none"
         style={{
           width: 360,
-          background:
-            'radial-gradient(ellipse 90% 70% at 75% 50%, rgba(244,185,66,0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 90% 70% at 75% 50%, var(--signal-faint) 0%, transparent 70%)',
         }}
       />
 

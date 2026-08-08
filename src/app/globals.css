@@ -41,47 +41,58 @@
   --chain-connector-cold: rgba(42, 45, 66, 0.7);
 }
 
-/* ── Light mode overrides ──────────────────────────────────────────────── */
+/* ── Light mode: "Daylight print" ─────────────────────────────────────────
+   Character: crisp paper under natural light — NOT a dimmed screen.
+   Dark mode = neon-in-darkness.  Light mode = ink-on-paper.
+   Two completely different visual worlds, same product.
+─────────────────────────────────────────────────────────────────────────── */
 html.light {
-  /*
-   * Dim slate — deliberately NOT white.
-   * Think: a monitor at 50% brightness, or graphite paper.
-   * Background sits around 67% luminance — grey enough to read as "dim light",
-   * bright enough to be clearly different from dark mode.
-   */
-  --c-ink:         210 212 222;   /* #D2D4DE — cool grey slate */
-  --c-coal:        218 220 230;   /* #DADCE6 — slightly lighter surface */
-  --c-graphite:    226 228 236;   /* #E2E4EC — elevated surface */
-  --c-rim:         174 176 192;   /* #AEB0C0 — borders visible on this bg */
-  --c-ash:         90 92 122;     /* #5A5C7A — muted text (4.4:1 contrast) */
-  --c-chalk:       10 12 24;      /* #0A0C18 — near-black text (13.5:1 contrast) */
-  --c-signal:      139 90 2;      /* #8B5A02 — dark amber (7.1:1 contrast on slate) */
-  --c-signal-dim:  115 74 1;      /* #734A01 */
+  /* Surfaces — very slightly cool off-white, not grey */
+  --c-ink:         248 249 252;  /* #F8F9FC — paper background */
+  --c-coal:        255 255 255;  /* #FFFFFF — card surface (lifts above bg) */
+  --c-graphite:    241 243 250;  /* #F1F3FA — elevated surface */
+  --c-rim:         226 228 240;  /* #E2E4F0 — cool hairline borders */
+
+  /* Text — reversed: dark on light. UNMISTAKABLY different from dark mode. */
+  --c-ash:         82 85 112;    /* #525570 — muted text (7:1 on white) */
+  --c-chalk:       11 13 26;     /* #0B0D1A — primary text (18:1 on bg) */
+
+  /* Accent — dark rich amber: jewel-like on white, not neon */
+  --c-signal:      158 98 0;     /* #9E6200 — WCAG AA (4.3:1 on #F8F9FC) */
+  --c-signal-dim:  130 80 0;     /* #825000 */
 
   /* Hex fallbacks for inline SVG / style="" */
-  --ink:          #D2D4DE;
-  --coal:         #DADCE6;
-  --graphite:     #E2E4EC;
-  --rim:          #AEB0C0;
-  --ash:          #5A5C7A;
-  --chalk:        #0A0C18;
-  --signal:       #8B5A02;
-  --signal-dim:   #734A01;
-  --signal-faint: rgba(139, 90, 2, 0.08);
-  --signal-glow:  rgba(139, 90, 2, 0.20);
+  --ink:           #F8F9FC;
+  --coal:          #FFFFFF;
+  --graphite:      #F1F3FA;
+  --rim:           #E2E4F0;
+  --ash:           #525570;
+  --chalk:         #0B0D1A;
+  --signal:        #9E6200;
+  --signal-dim:    #825000;
+  --signal-faint:  rgba(158, 98, 0, 0.07);
+  --signal-glow:   rgba(158, 98, 0, 0.18);
 
-  /* SVG chain: upcoming links = slightly darker than the grey background */
-  --chain-upcoming-a: #B4B6C6;
-  --chain-upcoming-b: #A4A6B6;
-  --chain-connector-hot: rgba(139, 90, 2, 0.6);
-  --chain-connector-cold: rgba(155, 158, 178, 0.7);
+  /* SVG chain: upcoming links = pale cool slate on white bg */
+  --chain-upcoming-a: #D0D2E4;
+  --chain-upcoming-b: #C0C2D4;
+  --chain-connector-hot: rgba(140, 90, 0, 0.55);
+  --chain-connector-cold: rgba(190, 192, 210, 0.75);
+
+  /* Card elevation — shadows replace glow in daylight */
+  --shadow-card: 0 1px 3px rgba(11, 13, 26, 0.07), 0 4px 16px rgba(11, 13, 26, 0.05);
 }
 
-/* ── Dim-light body background ───────────────────────────────────────────── */
+/* Body background — paper with a cool depth from top-left, warm hint right */
 html.light body {
   background:
-    radial-gradient(ellipse 50% 80% at 88% 45%, rgba(139,90,2,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 100% 70% at 10% 20%, #C8CAD6 0%, #D2D4DE 60%);
+    radial-gradient(ellipse 45% 65% at 85% 50%, rgba(158,98,0,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 5% 10%, #ECEEFA 0%, #F8F9FC 55%);
+}
+
+/* Cards get subtle box-shadow in light mode — elevation through shadow, not border */
+html.light .rounded-card {
+  box-shadow: var(--shadow-card);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════

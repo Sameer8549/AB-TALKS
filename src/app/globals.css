@@ -39,6 +39,11 @@
   --chain-upcoming-b: #1A1D30;
   --chain-connector-hot: rgba(196, 120, 32, 0.8);
   --chain-connector-cold: rgba(42, 45, 66, 0.7);
+
+  /* ── Font families (previously injected by next/font/google) ─────────── */
+  --font-space-grotesk: 'Space Grotesk', system-ui, sans-serif;
+  --font-outfit:        'Outfit', system-ui, sans-serif;
+  --font-jetbrains-mono:'JetBrains Mono', 'Courier New', monospace;
 }
 
 /* ── Light mode: "Daylight print" ─────────────────────────────────────────

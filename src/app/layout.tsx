@@ -1,30 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Space_Grotesk, Outfit, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
-
-// ─── Font Loading ─────────────────────────────────────────────────────────────
-// All fonts loaded via next/font for zero layout shift + self-hosting.
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-space-grotesk',
-  display: 'swap',
-})
-
-const outfit = Outfit({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],
-  variable: '--font-outfit',
-  display: 'swap',
-})
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  variable: '--font-jetbrains-mono',
-  display: 'swap',
-})
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
@@ -57,7 +32,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#0C0E14', // --ink: matches the background for status bar on mobile
+  themeColor: '#0C0E14',
 }
 
 // ─── Root Layout ─────────────────────────────────────────────────────────────
@@ -69,10 +44,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${outfit.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
       <head>
+        {/* Google Fonts — loaded at runtime, not at build time (avoids network dependency during CI/CD) */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        />
         {/*
          * Flash-prevention: runs synchronously before first paint.
          * Reads localStorage and applies 'light' class to <html>

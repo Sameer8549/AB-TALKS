@@ -116,35 +116,37 @@ function RecoveryBanner({ day, onRepairClick }: { day: DayTask; onRepairClick: (
       transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
       style={{ background: 'rgba(239,68,68,0.06)', borderBottom: '1px solid rgba(239,68,68,0.2)' }}
     >
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3 sm:gap-4">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-        {/* Cracked chain icon */}
-        <div className="flex-shrink-0">
-          <svg width="36" height="20" viewBox="0 0 48 24" fill="none">
-            <ellipse cx="12" cy="12" rx="10" ry="6.5" stroke="#EF4444" strokeWidth="3.5" fill="none" />
-            <ellipse cx="36" cy="12" rx="10" ry="6.5" stroke="#EF4444" strokeWidth="3.5" fill="none" opacity="0.5" />
-            {/* Crack in middle */}
-            <path d="M22 12 L24 8 L25 14 L27 12" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" />
-          </svg>
+        {/* Row 1 on mobile: icon + text */}
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          {/* Cracked chain icon */}
+          <div className="flex-shrink-0">
+            <svg width="36" height="20" viewBox="0 0 48 24" fill="none">
+              <ellipse cx="12" cy="12" rx="10" ry="6.5" stroke="#EF4444" strokeWidth="3.5" fill="none" />
+              <ellipse cx="36" cy="12" rx="10" ry="6.5" stroke="#EF4444" strokeWidth="3.5" fill="none" opacity="0.5" />
+              <path d="M22 12 L24 8 L25 14 L27 12" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </div>
+
+          {/* Text */}
+          <div className="min-w-0">
+            <p className="font-display font-bold" style={{ fontSize: 13, color: '#EF4444' }}>
+              Day {day.day} missed — your chain is cracked
+            </p>
+            <p className="font-mono text-ash" style={{ fontSize: 10, letterSpacing: '0.08em' }}>
+              {expired
+                ? 'Recovery window expired — the crack becomes a permanent scar'
+                : `Repair window: ${timeLeft} remaining`}
+            </p>
+          </div>
         </div>
 
-        {/* Text */}
-        <div className="flex-1 min-w-0">
-          <p className="font-display font-bold" style={{ fontSize: 13, color: '#EF4444' }}>
-            Day {day.day} missed — your chain is cracked
-          </p>
-          <p className="font-mono text-ash" style={{ fontSize: 10, letterSpacing: '0.08em' }}>
-            {expired
-              ? 'Recovery window expired — the crack becomes a permanent scar'
-              : `Repair window: ${timeLeft} remaining`}
-          </p>
-        </div>
-
-        {/* Countdown pill */}
+        {/* Row 2 on mobile: countdown + button */}
         {!expired && (
-          <div className="flex-shrink-0 flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 flex-shrink-0 sm:flex-shrink-0">
             <motion.div
-              className="font-mono font-bold flex-shrink-0"
+              className="font-mono font-bold"
               style={{ fontSize: 14, color: '#EF4444', letterSpacing: '-0.02em' }}
               animate={{ opacity: [1, 0.6, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
@@ -154,8 +156,8 @@ function RecoveryBanner({ day, onRepairClick }: { day: DayTask; onRepairClick: (
             <button
               id="repair-now-btn"
               onClick={onRepairClick}
-              className="font-display font-bold px-3 py-1.5 rounded-pill flex-shrink-0 transition-all hover:brightness-110"
-              style={{ background: 'rgba(239,68,68,0.15)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.35)', fontSize: 11, cursor: 'pointer' }}
+              className="font-display font-bold px-4 py-2 rounded-pill flex-shrink-0 transition-all hover:brightness-110"
+              style={{ background: 'rgba(239,68,68,0.15)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.35)', fontSize: 12, cursor: 'pointer', minHeight: 36 }}
             >
               Repair Now →
             </button>
@@ -334,13 +336,17 @@ function AchBadge({ ach, i }: { ach: Achievement; i: number }) {
 
 // ─── Demo switcher ────────────────────────────────────────────────────────────
 function DemoSwitcher({ state, onChange }: { state: DemoState; onChange: (s: DemoState) => void }) {
-  const labels: [DemoState, string][] = [['normal', 'Normal'], ['new', 'New Student'], ['missed', 'Missed Day']]
+  const labels: [DemoState, string, string][] = [
+    ['normal', 'Normal',      'Normal'],
+    ['new',    'New',         'New Student'],
+    ['missed', 'Missed',      'Missed Day'],
+  ]
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-1.5">
+    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 sm:left-auto sm:right-5 sm:translate-x-0 sm:bottom-5 z-50 flex flex-col items-center sm:items-end gap-1.5">
       <p className="font-mono text-ash" style={{ fontSize: 7.5, letterSpacing: '0.18em', textTransform: 'uppercase' }}>Preview State</p>
       <div className="flex gap-1 rounded-card px-2 py-1.5"
         style={{ background: 'var(--coal)', border: '1px solid var(--rim)', boxShadow: '0 8px 24px rgba(0,0,0,0.35)' }}>
-        {labels.map(([s, label]) => (
+        {labels.map(([s, shortLabel, longLabel]) => (
           <button key={s} onClick={() => onChange(s)}
             className="font-mono px-2.5 py-1 rounded-[6px] transition-all"
             style={{
@@ -348,8 +354,14 @@ function DemoSwitcher({ state, onChange }: { state: DemoState; onChange: (s: Dem
               background: state === s ? (s === 'missed' ? 'rgba(239,68,68,0.85)' : 'var(--signal)') : 'transparent',
               color: state === s ? (s === 'missed' ? '#fff' : 'var(--ink)') : 'var(--ash)',
               cursor: 'pointer',
+              minHeight: 32,
             }}
-          >{label}</button>
+            title={longLabel}
+          >
+            {/* Short label on mobile, full on desktop */}
+            <span className="sm:hidden">{shortLabel}</span>
+            <span className="hidden sm:inline">{longLabel}</span>
+          </button>
         ))}
       </div>
     </div>

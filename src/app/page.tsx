@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <main className="min-h-[100dvh] bg-ink">
+    <main className="min-h-[100dvh]">
       <NavBar />
       <HeroSection />
       <HowItWorks />

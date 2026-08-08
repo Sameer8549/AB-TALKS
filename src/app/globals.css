@@ -37,7 +37,16 @@ html {
 }
 
 body {
-  background-color: var(--ink);
+  /*
+   * Not flat black. A canvas with two light sources:
+   *   1. Cool blue-ink depth from top-left (the "screen glow")
+   *   2. Faint warm amber on the right (the chain's own heat)
+   * Together they make the dark feel like a space, not a void.
+   */
+  background:
+    radial-gradient(ellipse 50% 80% at 88% 45%, rgba(184, 115, 18, 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 100% 70% at 10% 20%, #121721 0%, #0c0e14 60%);
+  background-attachment: fixed;
   color: var(--chalk);
   font-family: var(--font-outfit), system-ui, sans-serif;
   font-size: 1rem;

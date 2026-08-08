@@ -39,12 +39,12 @@ export default function NavBar() {
           >
             How it works
           </a>
-          <a
-            href="#tracks"
+          <Link
+            href="/dashboard"
             className="font-body text-sm text-ash hover:text-chalk transition-colors duration-200"
           >
             Tracks
-          </a>
+          </Link>
         </div>
 
         {/* Right: theme toggle + CTA */}

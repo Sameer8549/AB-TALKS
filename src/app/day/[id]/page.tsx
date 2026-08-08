@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import NavBar from '@/components/NavBar'
+import ProofSubmitForm from '@/components/ProofSubmitForm'
 import { days } from '@/data/mockData'
 import type { DayTask } from '@/data/mockData'
 
@@ -132,92 +133,7 @@ function ProofPanel({ day }: { day: DayTask }) {
   )
 }
 
-// ─── Submission form (for today's task) ──────────────────────────────────────
-function SubmitForm({ day }: { day: DayTask }) {
-  const [github, setGithub] = useState('')
-  const [linkedin, setLinkedin] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [done, setDone] = useState(false)
-  const valid = github.startsWith('https://') && linkedin.startsWith('https://')
-
-  if (done) {
-    return (
-      <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }}
-        className="rounded-card p-6 flex flex-col items-center gap-3 text-center"
-        style={{ background: 'rgba(34,197,94,0.07)', border: '1px solid rgba(34,197,94,0.22)' }}>
-        <motion.div initial={{ scale: 0, rotate: -30 }} animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: 'spring', stiffness: 350, damping: 18, delay: 0.1 }}
-          className="w-14 h-14 rounded-full flex items-center justify-center"
-          style={{ background: 'rgba(34,197,94,0.14)', border: '2px solid rgba(34,197,94,0.4)' }}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12.5L9.5 17L19 7" stroke="#22C55E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </motion.div>
-        <div>
-          <p className="font-display font-bold text-chalk" style={{ fontSize: 18 }}>Day {day.day} locked in.</p>
-          <p className="font-body text-ash mt-1.5" style={{ fontSize: 13 }}>The chain holds. Come back tomorrow.</p>
-        </div>
-        <Link href="/dashboard"
-          className="font-mono text-signal hover:text-chalk transition-colors mt-1"
-          style={{ fontSize: 11 }}>
-          ← Back to dashboard
-        </Link>
-      </motion.div>
-    )
-  }
-
-  return (
-    <div className="rounded-card overflow-hidden"
-      style={{ background: 'var(--coal)', border: '1px solid rgba(244,185,66,0.25)' }}>
-      <div className="h-[3px] relative overflow-hidden" style={{ background: 'var(--graphite)' }}>
-        <motion.div className="absolute inset-y-0"
-          style={{ width: '60%', background: 'linear-gradient(90deg, transparent, #F4B942 40%, #FFE080 50%, #F4B942 60%, transparent)' }}
-          animate={{ left: ['-60%', '160%'] }}
-          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', repeatDelay: 0.6 }}
-        />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, #C07820, #F4B942 50%, #C07820)' }} />
-      </div>
-      <div className="p-5">
-        <p className="font-mono text-ash uppercase mb-4" style={{ fontSize: 8.5, letterSpacing: '0.2em' }}>Submit Your Proof</p>
-        <form onSubmit={async e => { e.preventDefault(); if (!valid) return; setLoading(true); await new Promise(r => setTimeout(r, 1200)); setLoading(false); setDone(true) }}
-          className="flex flex-col gap-3">
-          {(['github', 'linkedin'] as const).map(field => (
-            <div key={field} className="flex flex-col gap-1">
-              <label className="font-mono text-ash" style={{ fontSize: 9.5, letterSpacing: '0.08em' }}>
-                {field === 'github' ? 'GitHub commit / repo URL' : 'LinkedIn post URL'}
-              </label>
-              <input type="url"
-                value={field === 'github' ? github : linkedin}
-                onChange={e => field === 'github' ? setGithub(e.target.value) : setLinkedin(e.target.value)}
-                placeholder={field === 'github' ? 'https://github.com/...' : 'https://linkedin.com/posts/...'}
-                className="w-full rounded-[8px] px-3 py-2.5 font-mono text-chalk placeholder-ash/40 focus:outline-none transition-all"
-                style={{ fontSize: 12, border: '1px solid var(--rim)', background: 'var(--graphite)' }}
-                onFocus={e => { e.currentTarget.style.borderColor = 'var(--signal)'; e.currentTarget.style.background = 'var(--coal)' }}
-                onBlur={e => { e.currentTarget.style.borderColor = 'var(--rim)'; e.currentTarget.style.background = 'var(--graphite)' }}
-              />
-            </div>
-          ))}
-          <motion.button type="submit" disabled={!valid || loading}
-            whileTap={valid ? { scale: 0.97 } : {}}
-            className="mt-1 rounded-pill py-3 font-display font-bold transition-all"
-            style={{ fontSize: 13, background: valid ? 'var(--signal)' : 'var(--graphite)', color: valid ? 'var(--ink)' : 'var(--ash)', border: 'none', cursor: valid ? 'pointer' : 'not-allowed' }}
-          >
-            {loading
-              ? <span className="flex items-center justify-center gap-2">
-                  <motion.span className="inline-block w-3.5 h-3.5 rounded-full border-2 border-t-transparent"
-                    style={{ borderColor: 'var(--ink)', borderTopColor: 'transparent' }}
-                    animate={{ rotate: 360 }} transition={{ duration: 0.65, repeat: Infinity, ease: 'linear' }} />
-                  Locking in…
-                </span>
-              : `Lock in Day ${day.day}`
-            }
-          </motion.button>
-        </form>
-      </div>
-    </div>
-  )
-}
-
+// ─── Submission form delegated to ProofSubmitForm component ──────────────────
 // ─── Missed / Upcoming states ─────────────────────────────────────────────────
 function MissedPanel({ day }: { day: DayTask }) {
   const expired = day.recoveryDeadline
@@ -496,7 +412,7 @@ export default function DayDetailPage() {
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             {isCompleted && <ProofPanel day={day} />}
-            {isToday && <SubmitForm day={day} />}
+            {isToday && <ProofSubmitForm dayNumber={day.day} mode="today" />}
             {isMissed && <MissedPanel day={day} />}
             {isUpcoming && <UpcomingPanel />}
 

@@ -26,7 +26,7 @@ Most students use ABTalks late at night on their phones — exhausted after clas
 |---|---|---|
 | [`/`](https://abtalksredesign.vercel.app/) | **Landing Page** | The first 10 seconds: converts visitors with immediate clarity on the 4-step loop (`Pick` → `Build` → `Prove` → `Repair`). |
 | [`/dashboard`](https://abtalksredesign.vercel.app/dashboard) | **Student Command Center** | Daily hub featuring the **StreakChain**, live midnight countdown, adaptive time-aware copy, and **Preview-State Switcher**. |
-| [`/day/12`](https://abtalksredesign.vercel.app/day/12) | **Day Detail & Proof Engine** | Interactive task spec, structured requirements checklist, and real-time **LinkedIn-Ready Proof Card Generator**. |
+| [`/day/12`](https://abtalksredesign.vercel.app/day/12) | **Day Detail & Proof Engine** | Interactive task spec, structured requirements checklist, **LinkedIn PNG Proof Card** & **Official A4 PDF Certificate Generator**. |
 
 ---
 
@@ -52,7 +52,7 @@ Standard habit apps punish failure instantly. Miss one day, and your 30-day stre
 * ⌛ **Live Midnight Countdown**: As 12:00 AM approaches, a live `HH:MM:SS` timer creates urgency without anxiety.
 * 📈 **Personal-Best Nudge**: When approaching your longest personal streak, the UI nudges your history — never comparing you against others on a toxic leaderboard.
 * 🩹 **Recovery Grace & Gold Seams**: Missed a day? A 24-hour repair window opens. Submitting late doesn't erase the slip — it seals the link with a **Gold Seam**. The scar is public proof of resilience.
-* 🎴 **LinkedIn Proof Card Generator**: Submitting proof instantly generates a high-resolution, branded 1200×628 PNG image complete with a mini-chain visualizer, student stats, and streak badges ready for social proof.
+* 🎴 **Dual Proof Export (PNG Social Card + Official PDF Certificate)**: Submitting proof generates both a high-resolution 1200×628 PNG image for LinkedIn posts AND an official A4 landscape **PDF Build Proof Certificate** with verification tracking IDs.
 
 ---
 
@@ -96,7 +96,7 @@ Designed specifically for late-night mobile viewing. Avoids hostile bright white
 * **Framework**: Next.js 15 (App Router, Client & Server Components)
 * **Styling**: Tailwind CSS with CSS Variables (`rgb(var(--c-token) / <alpha>)`) for seamless theme modulation
 * **Animations**: Motion (Framer Motion v12) for spring physics & link-forging transitions
-* **Asset Export**: HTML5 Canvas 2D API for instant, zero-dependency client-side PNG proof generation
+* **Export Engine**: Dual client-side Canvas 2D PNG generator + native A4 Landscape PDF Certificate engine
 * **Icons**: `@phosphor-icons/react`
 
 ---

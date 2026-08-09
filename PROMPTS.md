@@ -225,7 +225,7 @@ This document serves as the **Authenticity & AI Assistance Log** for Stage 2 Hac
 
 ---
 
-### Phase 4: Narrative Unification, Proof Card Generator & Final Docs (Aug 9, 2026)
+### Phase 4: Narrative Unification, Dual Export Engine & Final Docs (Aug 9, 2026)
 
 #### 24. Narrative Unification Across All Screens
 * **Date/Time**: Aug 9, 2026, 6:42 AM IST (`06:42:53`)
@@ -284,6 +284,33 @@ This document serves as the **Authenticity & AI Assistance Log** for Stage 2 Hac
 * **Verification**: Audited rendered README in Markdown viewer.
 * **Commit**: `2e0ea58` — `docs: finalize world-class README with route map and thesis diagram`
 
+#### 30. AI Log Timestamp Alignment
+* **Date/Time**: Aug 9, 2026, 9:20 AM IST (`09:20:01`)
+* **What was asked**: Update `PROMPTS.md` with exact real-time git commit timestamps.
+* **AI Output Used**: Log formatting logic.
+* **Manual Review / Changes**: Aligned commit timestamps with local git history.
+* **Files Affected**: `PROMPTS.md`
+* **Verification**: Audited timestamp sequence against git log.
+* **Commit**: `4148dcb` — `docs: update PROMPTS.md with exact git log real-time timestamps`
+
+#### 31. PDF Proof Certificate Generator Addition
+* **Date/Time**: Aug 9, 2026, 9:33 AM IST (`09:33:39`)
+* **What was asked**: Add downloadable PDF Proof Certificate feature alongside PNG image export in `ProofCard.tsx`.
+* **AI Output Used**: Printable HTML/CSS landscape template and `window.print()` trigger.
+* **Manual Review / Changes**: Designed A4 landscape gold foil border layout with verification ID tracking.
+* **Files Affected**: `src/components/ProofCard.tsx`
+* **Verification**: Triggered PDF export and verified print dialog opened.
+* **Commit**: `32250fb` — `feat: add PDF Proof Certificate generator alongside PNG export`
+
+#### 32. Export Engine Text Alignment & Baseline Metric Fixes
+* **Date/Time**: Aug 9, 2026, 9:35 AM IST (`09:35:29`)
+* **What was asked**: Fix text alignment, baseline metrics, system font stack fallbacks, and print dimensions in both PNG image and PDF certificate export engines.
+* **AI Output Used**: Canvas 2D textBaseline diagnostic and CSS print container constraints.
+* **Manual Review / Changes**: Locked `textBaseline = 'alphabetic'`, system font stack, and `297mm × 210mm` printable A4 landscape dimensions.
+* **Files Affected**: `src/components/ProofCard.tsx`
+* **Verification**: Exported PNG and PDF in Chrome, verifying zero character overlap or text shifting.
+* **Commit**: `b135d8e` — `fix: resolve text alignment and font baseline metrics in PNG and PDF export engines`
+
 ---
 
 ## 📊 Summary of AI vs. Human Contribution
@@ -292,7 +319,7 @@ This document serves as the **Authenticity & AI Assistance Log** for Stage 2 Hac
 |---|---|---|
 | **Architecture & State** | Next.js file routes & initial component boundaries | Engineered `sessionStorage` demo switcher sync & hook order safety |
 | **Styling & System** | CSS channel variable presets & Framer Motion physics config | Tuned color tokens, light mode paper aesthetic & 390px responsive breakpoints |
-| **Logic & Export** | Canvas 2D context drawing methods | Custom 1200×628 retina export engine, mini-chain rendering & fallback safety |
+| **Logic & Export** | Canvas 2D & HTML print context drawing methods | Custom 1200×628 retina export engine, A4 PDF certificate engine & text baseline metric alignment |
 | **Copy & Narrative** | Drafted task copy descriptions & step titles | Formulated product thesis ("the chain knows what time it is") & unified copy tone |
 
 ---

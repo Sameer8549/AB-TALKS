@@ -385,6 +385,15 @@ This document serves as the **Authenticity & AI Assistance Log** for Stage 2 Hac
 * **Verification**: Switched to Missed Day state, clicked "Repair Now", submitted URLs, and verified Day 5 turns to Gold Seam, streak updates to 5, Wrench achievement unlocks, and ProofCard generator opens.
 * **Commit**: `feat: interactive state mutation and proof card export for missed day repair`
 
+#### 41. Google Drive Video Presentation Link & README Video Banner
+* **Date/Time**: Aug 9, 2026, 7:11 PM IST (`19:11:53`)
+* **What was asked**: Add Google Drive video demo link banner (`https://drive.google.com/file/d/1u2BW5_4qIqiErGwtO4RMeAqykyyEC99h/view`) to `README.md` and clean up local media files.
+* **AI Output Used**: Clean markdown callout banner & badge integration.
+* **Manual Review / Changes**: Replaced direct video embedding with lightweight Google Drive link badge and removed 21MB local files for smooth git push performance.
+* **Files Affected**: `README.md`, `PROMPTS.md`
+* **Verification**: Verified video link opens Google Drive presentation and README layout renders cleanly.
+* **Commit**: `docs: add Google Drive video demo link and header badges to README`
+
 ---
 
 ## 📊 Summary of AI vs. Human Contribution

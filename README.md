@@ -1,15 +1,3 @@
-# 🎬 ABTalks Redesign — Product Walkthrough & Video Demo
-
-<video src="https://raw.githubusercontent.com/Sameer8549/AB-TALKS/main/public/demo_video.mp4" controls width="100%" poster="./banner.png">
-  <p>Your browser does not support HTML5 video. <a href="./public/demo_video.mp4">Click here to watch or download the demo video</a>.</p>
-</video>
-
-[![Play Video Walkthrough](https://img.shields.io/badge/▶_Watch_Demo_Video-ABTalks_Redesign-F4B942?style=for-the-badge&logo=googlechrome&logoColor=0C0E14)](./public/demo_video.mp4)
-[![Live Demo](https://img.shields.io/badge/Live_App-abtalksredesign.vercel.app-F4B942?style=for-the-badge&logo=vercel&logoColor=0C0E14)](https://abtalksredesign.vercel.app)
-[![Tech Stack](https://img.shields.io/badge/Stack-Next.js_15_•_React_19_•_Tailwind_CSS-0C0E14?style=for-the-badge&logo=nextdotjs&logoColor=DDE1EA)](https://nextjs.org)
-
----
-
 ![ABTalks Redesign Header Banner](./banner.png)
 
 # ABTalks — Mobile-First Redesign
@@ -17,6 +5,15 @@
 > **"The chain knows what time it is."**
 > 
 > *Re-architecting habit formation for Indian college developers — 60-day challenge redesign.*
+
+[![Watch Video Demo](https://img.shields.io/badge/▶_Watch_Video_Demo-Google_Drive-F4B942?style=for-the-badge&logo=googledrive&logoColor=0C0E14)](https://drive.google.com/file/d/1u2BW5_4qIqiErGwtO4RMeAqykyyEC99h/view)
+[![Live Demo](https://img.shields.io/badge/Live_App-abtalksredesign.vercel.app-F4B942?style=for-the-badge&logo=vercel&logoColor=0C0E14)](https://abtalksredesign.vercel.app)
+[![Tech Stack](https://img.shields.io/badge/Stack-Next.js_15_•_React_19_•_Tailwind_CSS-0C0E14?style=for-the-badge&logo=nextdotjs&logoColor=DDE1EA)](https://nextjs.org)
+[![Hackathon](https://img.shields.io/badge/Event-ABTalks_Vibe_Code_Hackathon_2026-C49030?style=for-the-badge)](https://abtalksredesign.vercel.app)
+
+> 🎬 **Official Product Walkthrough & Video Presentation**: 
+> 
+> 👉 **[Click Here to Watch Full Video Demo on Google Drive](https://drive.google.com/file/d/1u2BW5_4qIqiErGwtO4RMeAqykyyEC99h/view)**
 
 ---
 
@@ -134,6 +131,7 @@ Visit [`http://localhost:3000`](http://localhost:3000) or test the live producti
 
 ## 📄 Hackathon Submission & AI Logs
 
+* 🎬 **Video Presentation Demo (Google Drive)**: 👉 **[Click Here to Watch Video Demo](https://drive.google.com/file/d/1u2BW5_4qIqiErGwtO4RMeAqykyyEC99h/view)**
 * 📜 **Full Commit Log & AI History**: [`PROMPTS.md`](./PROMPTS.md)
 * 👈 **Raw Prompt Chat Transcript (All 3,137 Lines)**: 👉 **[`public/Redesigning ABTalks Platform.md`](./public/Redesigning%20ABTalks%20Platform.md)**
 * 🌐 **Live Web Browser Prompt Viewer**: 👉 **[`https://abtalksredesign.vercel.app/prompts`](https://abtalksredesign.vercel.app/prompts)**

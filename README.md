@@ -1,3 +1,15 @@
+# 🎬 ABTalks Redesign — Product Walkthrough & Video Demo
+
+<video src="https://raw.githubusercontent.com/Sameer8549/AB-TALKS/main/public/demo_video.mp4" controls width="100%" poster="./banner.png">
+  <p>Your browser does not support HTML5 video. <a href="./public/demo_video.mp4">Click here to watch or download the demo video</a>.</p>
+</video>
+
+[![Play Video Walkthrough](https://img.shields.io/badge/▶_Watch_Demo_Video-ABTalks_Redesign-F4B942?style=for-the-badge&logo=googlechrome&logoColor=0C0E14)](./public/demo_video.mp4)
+[![Live Demo](https://img.shields.io/badge/Live_App-abtalksredesign.vercel.app-F4B942?style=for-the-badge&logo=vercel&logoColor=0C0E14)](https://abtalksredesign.vercel.app)
+[![Tech Stack](https://img.shields.io/badge/Stack-Next.js_15_•_React_19_•_Tailwind_CSS-0C0E14?style=for-the-badge&logo=nextdotjs&logoColor=DDE1EA)](https://nextjs.org)
+
+---
+
 ![ABTalks Redesign Header Banner](./banner.png)
 
 # ABTalks — Mobile-First Redesign
@@ -5,10 +17,6 @@
 > **"The chain knows what time it is."**
 > 
 > *Re-architecting habit formation for Indian college developers — 60-day challenge redesign.*
-
-[![Live Demo](https://img.shields.io/badge/Live_App-abtalksredesign.vercel.app-F4B942?style=for-the-badge&logo=vercel&logoColor=0C0E14)](https://abtalksredesign.vercel.app)
-[![Tech Stack](https://img.shields.io/badge/Stack-Next.js_15_•_React_19_•_Tailwind_CSS-0C0E14?style=for-the-badge&logo=nextdotjs&logoColor=DDE1EA)](https://nextjs.org)
-[![Hackathon](https://img.shields.io/badge/Event-ABTalks_Vibe_Code_Hackathon_2026-C49030?style=for-the-badge)](https://abtalksredesign.vercel.app)
 
 ---
 

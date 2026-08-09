@@ -276,7 +276,7 @@ function RecoveryForm({ day, onSuccess }: { day: DayTask; onSuccess?: (gh: strin
 }
 
 // ─── Submit form (for today's task) ──────────────────────────────────────────
-function SubmitForm({ day, onSuccess }: { day: DayTask; onSuccess?: () => void }) {
+function SubmitForm({ day, onSuccess }: { day: DayTask; onSuccess?: (gh: string, li: string) => void }) {
   const [github, setGithub] = useState('')
   const [linkedin, setLinkedin] = useState('')
   const [loading, setLoading] = useState(false)
@@ -305,7 +305,15 @@ function SubmitForm({ day, onSuccess }: { day: DayTask; onSuccess?: () => void }
   }
 
   return (
-    <form onSubmit={async e => { e.preventDefault(); if (!valid) return; setLoading(true); await new Promise(r => setTimeout(r, 1200)); setLoading(false); setDone(true); onSuccess?.() }}
+    <form onSubmit={async e => {
+      e.preventDefault()
+      if (!valid) return
+      setLoading(true)
+      await new Promise(r => setTimeout(r, 1200))
+      setLoading(false)
+      setDone(true)
+      onSuccess?.(github, linkedin)
+    }}
       className="mt-5 flex flex-col gap-3">
       <p className="font-mono text-ash uppercase" style={{ fontSize: 8.5, letterSpacing: '0.2em' }}>Submit Your Proof</p>
       {(['github', 'linkedin'] as const).map(field => (
@@ -410,6 +418,8 @@ export default function DashboardPage() {
   const [reqOpen, setReqOpen] = useState(true)
   const [showRepair, setShowRepair] = useState(false)
   const [todaySubmitted, setTodaySubmitted] = useState(false)
+  const [todayGithub, setTodayGithub] = useState('')
+  const [todayLinkedin, setTodayLinkedin] = useState('')
   const [repaired, setRepaired] = useState(false)
   const [repairGithub, setRepairGithub] = useState('')
   const [repairLinkedin, setRepairLinkedin] = useState('')
@@ -449,21 +459,40 @@ export default function DashboardPage() {
       }
       return { ...d, recoveryDeadline: missedDeadline || d.recoveryDeadline }
     }
+    if (d.status === 'today' && todaySubmitted) {
+      return {
+        ...d,
+        status: 'completed' as CellStatus,
+        githubUrl: todayGithub || 'https://github.com/priyabuilds/day-01-two-pointers',
+        linkedinUrl: todayLinkedin || 'https://linkedin.com/posts/priyabuilds_day1',
+        submittedAt: new Date().toISOString(),
+      }
+    }
     return d
   })
 
   // Dynamically compute streak stats
   const streak = {
     ...rawData.streak,
-    current: repaired ? rawData.streak.current + 1 : rawData.streak.current,
+    current: repaired
+      ? rawData.streak.current + 1
+      : (todaySubmitted ? rawData.streak.current + 1 : rawData.streak.current),
+    longest: repaired
+      ? Math.max(rawData.streak.longest, rawData.streak.current + 1)
+      : (todaySubmitted ? Math.max(rawData.streak.longest, rawData.streak.current + 1) : rawData.streak.longest),
+    totalCompleted: todaySubmitted ? rawData.streak.totalCompleted + 1 : rawData.streak.totalCompleted,
     totalRecovered: repaired ? rawData.streak.totalRecovered + 1 : rawData.streak.totalRecovered,
     totalMissed: repaired ? Math.max(0, rawData.streak.totalMissed - 1) : rawData.streak.totalMissed,
+    completionPercent: Math.round(((rawData.streak.totalCompleted + (todaySubmitted ? 1 : 0) + (repaired ? 1 : 0)) / 60) * 100),
   }
 
-  // Dynamically unlock achievement when repaired
+  // Dynamically unlock achievement when criteria met
   const achievements = rawData.achievements.map((ach) => {
     if (ach.id === 'ach_recovered' && repaired) {
       return { ...ach, unlockedAt: new Date().toISOString() }
+    }
+    if (ach.id === 'ach_first_commit' && (todaySubmitted || rawData.streak.totalCompleted > 0)) {
+      return { ...ach, unlockedAt: ach.unlockedAt || new Date().toISOString() }
     }
     return ach
   })
@@ -787,7 +816,11 @@ export default function DashboardPage() {
                   </div>
                 )}
                 <div className="my-5 h-px" style={{ background: 'var(--rim)' }} />
-                <SubmitForm day={todayTask} onSuccess={() => setTimeout(() => setTodaySubmitted(true), 1500)} />
+                <SubmitForm day={todayTask} onSuccess={(gh, li) => {
+                  setTodayGithub(gh)
+                  setTodayLinkedin(li)
+                  setTodaySubmitted(true)
+                }} />
               </div>
             </motion.article>
           ) : (

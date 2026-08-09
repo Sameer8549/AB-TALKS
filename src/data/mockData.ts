@@ -546,7 +546,64 @@ export const edgeCase_emptyProfile: MockData = {
       requirements: [],
     })),
   ],
-  achievements: [],
+  achievements: [
+    {
+      id: 'ach_first_commit',
+      title: 'First Link',
+      description: 'Submitted your very first day.',
+      icon: 'GitCommit',
+      unlockedAt: undefined,
+    },
+    {
+      id: 'ach_week_one',
+      title: 'Week One',
+      description: 'Complete 7 consecutive days.',
+      icon: 'CalendarCheck',
+      unlockedAt: undefined,
+    },
+    {
+      id: 'ach_recovered',
+      title: 'Repaired',
+      description: 'Use a Recovery Grace Window to save your streak.',
+      icon: 'Wrench',
+      unlockedAt: undefined,
+    },
+    {
+      id: 'ach_hard_done',
+      title: 'Hard Mode',
+      description: 'Complete a day rated Hard difficulty.',
+      icon: 'Fire',
+      unlockedAt: undefined,
+    },
+    {
+      id: 'ach_fullstack',
+      title: 'Full Stack',
+      description: 'Connected frontend to backend — both running live.',
+      icon: 'Stack',
+      unlockedAt: undefined,
+    },
+    {
+      id: 'ach_halfway',
+      title: 'Halfway',
+      description: 'Reach Day 30.',
+      icon: 'Medal',
+      unlockedAt: undefined,
+    },
+    {
+      id: 'ach_no_miss',
+      title: 'Clean Chain',
+      description: 'Complete 30 days with no missed days.',
+      icon: 'Link',
+      unlockedAt: undefined,
+    },
+    {
+      id: 'ach_finisher',
+      title: 'Finisher',
+      description: 'Complete all 60 days.',
+      icon: 'Trophy',
+      unlockedAt: undefined,
+    },
+  ],
 }
 
 // ─── Rahul Nair — Missed Day student persona ─────────────────────────────────

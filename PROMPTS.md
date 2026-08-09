@@ -369,7 +369,14 @@ This document serves as the **Authenticity & AI Assistance Log** for Stage 2 Hac
 * **Manual Review / Changes**: Configured Pavithra presenter metadata and scene voiceover timing tables.
 * **Files Affected**: `src/app/script/page.tsx`, `VIDEO_SCRIPT.md`
 * **Verification**: Navigated to `/script` and verified PDF export functionality.
-* **Commit**: `feat: add downloadable video presentation script route /script for Pavithra`
+#### 39. Real-Time 24-Hour Recovery Grace Session Timer
+* **Date/Time**: Aug 9, 2026, 5:34 PM IST (`17:34:32`)
+* **What was asked**: Ensure the Missed Day profile (Rahul Nair) presents a live 24-hour countdown window initialized on first page load per judge session with 1-second live ticking (`HH:MM:SS`).
+* **AI Output Used**: `localStorage` session persistence logic & 1-second interval countdown formatting.
+* **Manual Review / Changes**: Configured `abtalks_missed_timer_start` persistence so judge initial page load initializes a fresh, uninterrupted 24-hour repair window.
+* **Files Affected**: `src/app/dashboard/page.tsx`, `src/data/mockData.ts`, `PROMPTS.md`
+* **Verification**: Switched to Missed Day demo state on dashboard and verified live ticking timer (`23h 59m 58s`).
+* **Commit**: `feat: add live 24h recovery grace countdown per judge session`
 
 ---
 

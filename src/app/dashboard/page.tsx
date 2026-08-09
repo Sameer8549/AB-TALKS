@@ -56,12 +56,14 @@ function useCountdown(deadline: string | undefined): string | null {
     if (diff <= 0) return null
     const h = Math.floor(diff / 3600000)
     const m = Math.floor((diff % 3600000) / 60000)
-    return `${h}h ${m}m`
+    const s = Math.floor((diff % 60000) / 1000)
+    const pad = (n: number) => String(n).padStart(2, '0')
+    return `${h}h ${pad(m)}m ${pad(s)}s`
   }
   const [timeLeft, setTimeLeft] = useState<string | null>(null)
   useEffect(() => {
     setTimeLeft(calc())
-    const id = setInterval(() => setTimeLeft(calc()), 60000)
+    const id = setInterval(() => setTimeLeft(calc()), 1000)
     return () => clearInterval(id)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deadline])
@@ -377,8 +379,35 @@ export default function DashboardPage() {
   const [todaySubmitted, setTodaySubmitted] = useState(false)
   const repairRef = { current: null as HTMLDivElement | null }
 
+  // Dynamic 24h per-session recovery deadline for Missed Day profile
+  const [missedDeadline, setMissedDeadline] = useState<string | undefined>(undefined)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      let start = localStorage.getItem('abtalks_missed_timer_start')
+      if (!start) {
+        start = Date.now().toString()
+        localStorage.setItem('abtalks_missed_timer_start', start)
+      }
+      const startTime = parseInt(start, 10)
+      const targetTime = startTime + 24 * 60 * 60 * 1000
+      setMissedDeadline(new Date(targetTime).toISOString())
+    }
+  }, [])
+
   // Data source — switches with demo state
-  const { student, streak, days, achievements } = DATA_SOURCES[demoState]
+  const rawData = DATA_SOURCES[demoState]
+  const student = rawData.student
+  const streak = rawData.streak
+  const achievements = rawData.achievements
+
+  // Inject dynamic 24h deadline into missed profile days
+  const days = rawData.days.map((d) => {
+    if (d.status === 'missed') {
+      return { ...d, recoveryDeadline: missedDeadline || d.recoveryDeadline }
+    }
+    return d
+  })
 
   const todayTask    = days.find(d => d.status === 'today')
   const missedDay    = days.find(d => d.status === 'missed' && !!d.recoveryDeadline)

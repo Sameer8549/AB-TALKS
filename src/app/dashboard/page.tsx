@@ -615,12 +615,12 @@ export default function DashboardPage() {
             >
               {/* Shimmer bar */}
               <div className="h-[3px] relative overflow-hidden" style={{ background: 'var(--graphite)' }}>
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, #C07820, #F4B942 50%, #C07820)' }} />
                 <motion.div className="absolute inset-y-0"
-                  style={{ width: '60%', background: 'linear-gradient(90deg, transparent 0%, #F4B942 40%, #FFE080 50%, #F4B942 60%, transparent 100%)' }}
+                  style={{ width: '60%', background: 'linear-gradient(90deg, transparent 0%, #FFE080 50%, transparent 100%)', zIndex: 1 }}
                   animate={{ left: ['-60%', '160%'] }}
                   transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', repeatDelay: 0.6 }}
                 />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, #C07820, #F4B942 50%, #C07820)' }} />
               </div>
               <div className="p-5 sm:p-6">
                 <div className="flex items-start justify-between gap-3 mb-4">

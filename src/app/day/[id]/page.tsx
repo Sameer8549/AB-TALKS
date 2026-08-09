@@ -492,8 +492,8 @@ export default function DayDetailPage() {
                 style={{ background: 'var(--coal)', border: '1px solid var(--rim)' }}>
                 <p className="font-mono text-ash uppercase" style={{ fontSize: 8.5, letterSpacing: '0.2em' }}>Day Info</p>
                 {[
-                  ['Track', 'Full Stack Dev'],
-                  ['Date',  day.date ? new Date(day.date).toLocaleDateString('en-IN', { dateStyle: 'medium' }) : '—'],
+                  ['Track',      student.trackLabel],
+                  ['Date',       day.date ? new Date(day.date).toLocaleDateString('en-IN', { dateStyle: 'medium' }) : '—'],
                   ['Difficulty', day.difficulty.charAt(0).toUpperCase() + day.difficulty.slice(1)],
                 ].map(([label, val]) => (
                   <div key={label} className="flex items-center justify-between">

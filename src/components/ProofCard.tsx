@@ -221,28 +221,25 @@ async function downloadCard(props: ProofCardProps) {
   ctx.fillStyle = C.rim
   ctx.fillRect(56, 70, W - 112, 1)
 
-  // ── Giant day number ──
   ctx.font = `bold 148px system-ui, sans-serif`
   const dayGrd = ctx.createLinearGradient(56, 0, 56 + 600, 0)
   dayGrd.addColorStop(0,   C.chalk)
   dayGrd.addColorStop(0.6, C.chalk)
   dayGrd.addColorStop(1,   'rgba(240,237,230,0.4)')
   ctx.fillStyle = dayGrd
-  ctx.letterSpacing = '-6px'
+  // letterSpacing is a newer Canvas API — safe fallback
+  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '-6px'
   ctx.fillText(`Day ${props.dayNumber}`, 56, 240)
 
-  // ── Day title ──
   ctx.font = '300 22px system-ui, sans-serif'
   ctx.fillStyle = C.ash
-  ctx.letterSpacing = '0px'
+  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0px'
   ctx.fillText(truncate(props.dayTitle, 72), 56, 278)
 
   // ── Chain links ──
   const chainY   = 358
   const linkR    = 22
   const connW    = 18
-  const unit     = linkR * 2 + connW
-  const totalW   = props.chainWindow.length * linkR * 2 + (props.chainWindow.length - 1) * connW
   let   cx       = 56
 
   props.chainWindow.forEach((link, i) => {
@@ -304,12 +301,11 @@ async function downloadCard(props: ProofCardProps) {
     cx += linkR * 2 + connW
   })
 
-  // ── "Your chain" label ──
   ctx.font = '10px monospace'
   ctx.fillStyle = `${C.ash}99`
-  ctx.letterSpacing = '0.18em'
+  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0.18em'
   ctx.fillText('YOUR CHAIN', 56, chainY - linkR - 14)
-  ctx.letterSpacing = '0px'
+  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0px'
 
   // ── Divider above footer ──
   ctx.fillStyle = C.rim
@@ -322,9 +318,9 @@ async function downloadCard(props: ProofCardProps) {
 
   ctx.font = '11px monospace'
   ctx.fillStyle = C.ash
-  ctx.letterSpacing = '0.1em'
+  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0.1em'
   ctx.fillText(props.trackLabel.toUpperCase(), 56, H - 52)
-  ctx.letterSpacing = '0px'
+  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0px'
 
   // ── Streak badge ──
   const bW = 130, bH = 56, bX = W - 56 - bW, bY = H - 56 - bH + 8
@@ -343,10 +339,10 @@ async function downloadCard(props: ProofCardProps) {
 
   ctx.font = '9px monospace'
   ctx.fillStyle = C.ash
-  ctx.letterSpacing = '0.12em'
+  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0.12em'
   ctx.fillText('DAY STREAK', bX + bW / 2, bY + 50)
   ctx.textAlign = 'left'
-  ctx.letterSpacing = '0px'
+  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0px'
 
   // ── Site footer ──
   ctx.font = '10px monospace'

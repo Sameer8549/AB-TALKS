@@ -1,32 +1,36 @@
-# ABTalks — Redesigned
+![ABTalks Redesign Header Banner](./public/abtalks_banner.png)
 
-> **"A chain you don't want to break."**
+# ABTalks — Mobile-First Redesign
+
+> **"The chain knows what time it is."**
 > 
-> *Re-architecting habit formation for Indian college developers — through context-aware UI, Recovery Grace, and physicalized streak mechanics.*
+> *Re-architecting habit formation for Indian college developers — built for the [Official ABTalks Platform](https://www.abtalks.in/) 60-day challenge.*
 
+[![ABTalks Platform](https://img.shields.io/badge/Official_Platform-ABTalks.in-F4B942?style=for-the-badge&logo=googlechrome&logoColor=0C0E14)](https://www.abtalks.in/)
 [![Live Demo](https://img.shields.io/badge/Live_App-abtalksredesign.vercel.app-F4B942?style=for-the-badge&logo=vercel&logoColor=0C0E14)](https://abtalksredesign.vercel.app)
 [![Tech Stack](https://img.shields.io/badge/Stack-Next.js_15_•_React_19_•_Tailwind_CSS-0C0E14?style=for-the-badge&logo=nextdotjs&logoColor=DDE1EA)](https://nextjs.org)
-[![Hackathon](https://img.shields.io/badge/Event-ABTalks_Vibe_Code_Hackathon_2026-C49030?style=for-the-badge)](https://abtalksredesign.vercel.app)
+[![Hackathon](https://img.shields.io/badge/Event-ABTalks_Vibe_Code_Hackathon_2026-C49030?style=for-the-badge)](https://www.abtalks.in/)
 
 ---
 
 ## ⚡ The Elevator Pitch
 
-ABTalks runs a 60-day coding challenge for Indian college students: **pick a track, build daily, post proof (GitHub + LinkedIn), keep the chain unbroken.** 
+[**ABTalks**](https://www.abtalks.in/) runs a 60-day coding challenge for Indian college students: **pick a track, build daily, post proof (GitHub commit + LinkedIn post), and forge a public streak.**
 
-Most students use ABTalks late at night on their phones — exhausted after classes, fighting fatigue, trying to hold onto a habit. The original product mechanics worked, but its interface was friction-heavy and unforgiving. 
+Most students use ABTalks late at night on their phones — exhausted after classes, fighting fatigue, trying to keep a habit alive. The original product mechanics worked, but its interface was friction-heavy, generic, and unforgiving.
 
-**This redesign transforms ABTalks from a rigid discipline tracker into an adaptive, context-reading platform.**
+**This redesign transforms ABTalks from a rigid discipline tracker into an adaptive, context-aware platform.**
 
 ---
 
 ## 🗺️ Route Map & Judge Walkthrough
 
-| Route | View | Core Value Proposition & Judge Focus |
+| Route | Screen | Core Value Proposition & Judge Focus |
 |---|---|---|
 | [`/`](https://abtalksredesign.vercel.app/) | **Landing Page** | The first 10 seconds: converts visitors with immediate clarity on the 4-step loop (`Pick` → `Build` → `Prove` → `Repair`). |
 | [`/dashboard`](https://abtalksredesign.vercel.app/dashboard) | **Student Command Center** | Daily hub featuring the **StreakChain**, live midnight countdown, adaptive time-aware copy, and **Preview-State Switcher**. |
 | [`/day/12`](https://abtalksredesign.vercel.app/day/12) | **Day Detail & Proof Engine** | Interactive task spec, structured requirements checklist, **LinkedIn PNG Proof Card** & **Official A4 PDF Certificate Generator**. |
+| [`/prompts`](https://abtalksredesign.vercel.app/prompts) | **Live Prompt History Viewer** | Interactive browser viewer for the full 3,137-line AI prompt conversation history transcript. |
 
 ---
 
@@ -60,9 +64,9 @@ Standard habit apps punish failure instantly. Miss one day, and your 30-day stre
 
 We built a live **Preview State Switcher** floating on the dashboard so judges can audit every edge case instantly:
 
-1. **`Normal State`**: Active student mid-challenge (12-day streak, active chain, history populated).
-2. **`New Student`**: Zero streak, Day 1 initialization, zero history — designed to welcome, not shame.
-3. **`Missed Day`**: Live Recovery Grace banner, 24h countdown, repair form, and cracked link visualization.
+1. **`Normal State`**: Active student mid-challenge (Arjun Mehta — 12-day streak, active chain, history populated).
+2. **`New Student`**: Zero streak (Priya Sharma — Day 1 initialization, zero history — designed to welcome, not shame).
+3. **`Missed Day`**: Live Recovery Grace banner (Rahul Nair — 24h countdown, repair form, and cracked link visualization).
 
 ---
 
@@ -123,18 +127,19 @@ Visit [`http://localhost:3000`](http://localhost:3000) or test the live producti
 
 ## 📄 Hackathon Submission & AI Logs
 
-* **Full Commit Log & AI History**: [`PROMPTS.md`](./PROMPTS.md)
-* **Raw Prompt Chat Transcript (3,137 lines)**: 👉 **[`public/Redesigning ABTalks Platform.md`](./public/Redesigning%20ABTalks%20Platform.md)**
-* **Live Web Browser Prompt Viewer**: 👉 **[`https://abtalksredesign.vercel.app/prompts`](https://abtalksredesign.vercel.app/prompts)**
-* **Product Architecture Notes**: [`NOTES.md`](./NOTES.md)
+* 📜 **Full Commit Log & AI History**: [`PROMPTS.md`](./PROMPTS.md)
+* 👈 **Raw Prompt Chat Transcript (All 3,137 Lines)**: 👉 **[`public/Redesigning ABTalks Platform.md`](./public/Redesigning%20ABTalks%20Platform.md)**
+* 🌐 **Live Web Browser Prompt Viewer**: 👉 **[`https://abtalksredesign.vercel.app/prompts`](https://abtalksredesign.vercel.app/prompts)**
+* 📹 **Video Script & Presenter Guide (Pavithra V)**: 👉 **[`VIDEO_SCRIPT.md`](./VIDEO_SCRIPT.md)**
+* 📄 **Product Architecture Notes**: [`NOTES.md`](./NOTES.md)
 
 ---
 
-## 👥 Team 404 Foundation Us
+## 👥 Team 404 Found Us
 
 * **Abdul Sameer** (Team Lead) — *HKBK College of Engineering*
 * **Mahendra Selvan** — *HKBK College of Engineering*
 * **Pavithra V** — *Sapthagiri College of Engineering*
 
 ---
-*Built with passion for the ABTalks Vibe Code Hackathon (Aug 7–9, 2026).*
+*Built with passion for the [ABTalks Vibe Code Hackathon](https://www.abtalks.in/) (Aug 7–9, 2026).*

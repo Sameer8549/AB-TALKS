@@ -1,21 +1,20 @@
-![ABTalks Redesign Header Banner](./public/abtalks_banner.png)
+![ABTalks Redesign Header Banner](./banner.png)
 
 # ABTalks — Mobile-First Redesign
 
 > **"The chain knows what time it is."**
 > 
-> *Re-architecting habit formation for Indian college developers — built for the [Official ABTalks Platform](https://www.abtalks.in/) 60-day challenge.*
+> *Re-architecting habit formation for Indian college developers — 60-day challenge redesign.*
 
-[![ABTalks Platform](https://img.shields.io/badge/Official_Platform-ABTalks.in-F4B942?style=for-the-badge&logo=googlechrome&logoColor=0C0E14)](https://www.abtalks.in/)
 [![Live Demo](https://img.shields.io/badge/Live_App-abtalksredesign.vercel.app-F4B942?style=for-the-badge&logo=vercel&logoColor=0C0E14)](https://abtalksredesign.vercel.app)
 [![Tech Stack](https://img.shields.io/badge/Stack-Next.js_15_•_React_19_•_Tailwind_CSS-0C0E14?style=for-the-badge&logo=nextdotjs&logoColor=DDE1EA)](https://nextjs.org)
-[![Hackathon](https://img.shields.io/badge/Event-ABTalks_Vibe_Code_Hackathon_2026-C49030?style=for-the-badge)](https://www.abtalks.in/)
+[![Hackathon](https://img.shields.io/badge/Event-ABTalks_Vibe_Code_Hackathon_2026-C49030?style=for-the-badge)](https://abtalksredesign.vercel.app)
 
 ---
 
 ## ⚡ The Elevator Pitch
 
-[**ABTalks**](https://www.abtalks.in/) runs a 60-day coding challenge for Indian college students: **pick a track, build daily, post proof (GitHub commit + LinkedIn post), and forge a public streak.**
+**ABTalks** runs a 60-day coding challenge for Indian college students: **pick a track, build daily, post proof (GitHub commit + LinkedIn post), and forge a public streak.**
 
 Most students use ABTalks late at night on their phones — exhausted after classes, fighting fatigue, trying to keep a habit alive. The original product mechanics worked, but its interface was friction-heavy, generic, and unforgiving.
 
@@ -130,7 +129,6 @@ Visit [`http://localhost:3000`](http://localhost:3000) or test the live producti
 * 📜 **Full Commit Log & AI History**: [`PROMPTS.md`](./PROMPTS.md)
 * 👈 **Raw Prompt Chat Transcript (All 3,137 Lines)**: 👉 **[`public/Redesigning ABTalks Platform.md`](./public/Redesigning%20ABTalks%20Platform.md)**
 * 🌐 **Live Web Browser Prompt Viewer**: 👉 **[`https://abtalksredesign.vercel.app/prompts`](https://abtalksredesign.vercel.app/prompts)**
-* 📹 **Video Script & Presenter Guide (Pavithra V)**: 👉 **[`VIDEO_SCRIPT.md`](./VIDEO_SCRIPT.md)**
 * 📄 **Product Architecture Notes**: [`NOTES.md`](./NOTES.md)
 
 ---
@@ -142,4 +140,4 @@ Visit [`http://localhost:3000`](http://localhost:3000) or test the live producti
 * **Pavithra V** — *Sapthagiri College of Engineering*
 
 ---
-*Built with passion for the [ABTalks Vibe Code Hackathon](https://www.abtalks.in/) (Aug 7–9, 2026).*
+*Built with passion for the ABTalks Vibe Code Hackathon (Aug 7–9, 2026).*

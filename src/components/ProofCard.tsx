@@ -20,16 +20,16 @@ export interface ProofCardProps {
 
 // ─── Colour palette ───────────────────────────────────────────────────────────
 const C = {
-  ink:      '#0A0A0A',
-  coal:     '#111111',
-  graphite: '#1C1C1C',
-  chalk:    '#F0EDE6',
-  ash:      '#5A5A5A',
-  signal:   '#F4B942',
-  signalDim:'#C07820',
-  green:    '#22C55E',
-  red:      '#EF4444',
-  rim:      '#222222',
+  ink:       '#0A0A0A',
+  coal:      '#111111',
+  graphite:  '#1C1C1C',
+  chalk:     '#F0EDE6',
+  ash:       '#5A5A5A',
+  signal:    '#F4B942',
+  signalDim: '#C07820',
+  green:     '#22C55E',
+  red:       '#EF4444',
+  rim:       '#222222',
 }
 
 // ─── Link status → colour ─────────────────────────────────────────────────────
@@ -162,20 +162,19 @@ function Connector({ left, right }: { left: ChainLink; right: ChainLink }) {
   )
 }
 
-// ─── Canvas download ──────────────────────────────────────────────────────────
-// LinkedIn optimal: 1200×628. Retina 2× → 2400×1256 canvas.
-async function downloadCard(props: ProofCardProps) {
+// ─── Canvas download (PNG image) ──────────────────────────────────────────────
+async function downloadPNG(props: ProofCardProps) {
   const W = 1200, H = 628, S = 2
   const canvas = document.createElement('canvas')
   canvas.width = W * S; canvas.height = H * S
   const ctx = canvas.getContext('2d')!
   ctx.scale(S, S)
 
-  // ── Background ──
+  // Background
   ctx.fillStyle = C.coal
   ctx.fillRect(0, 0, W, H)
 
-  // Radial ambient glow (top-right, mirroring hero section)
+  // Radial ambient glows
   const grd = ctx.createRadialGradient(W * 0.82, H * 0.28, 0, W * 0.82, H * 0.28, W * 0.55)
   grd.addColorStop(0,   'rgba(244,185,66,0.07)')
   grd.addColorStop(0.5, 'rgba(244,185,66,0.025)')
@@ -183,14 +182,13 @@ async function downloadCard(props: ProofCardProps) {
   ctx.fillStyle = grd
   ctx.fillRect(0, 0, W, H)
 
-  // Bottom-left cool glow
   const grd2 = ctx.createRadialGradient(W * 0.05, H * 0.85, 0, W * 0.05, H * 0.85, W * 0.4)
   grd2.addColorStop(0,   'rgba(34,197,94,0.04)')
   grd2.addColorStop(1,   'transparent')
   ctx.fillStyle = grd2
   ctx.fillRect(0, 0, W, H)
 
-  // ── Top gold bar ──
+  // Top gold bar
   const bar = ctx.createLinearGradient(0, 0, W, 0)
   bar.addColorStop(0,   C.signalDim)
   bar.addColorStop(0.5, C.signal)
@@ -198,11 +196,11 @@ async function downloadCard(props: ProofCardProps) {
   ctx.fillStyle = bar
   ctx.fillRect(0, 0, W, 5)
 
-  // ── Bottom border line ──
+  // Bottom border line
   ctx.fillStyle = C.rim
   ctx.fillRect(0, H - 1, W, 1)
 
-  // ── Brand top-left ──
+  // Brand top-left
   ctx.font = 'bold 18px system-ui, sans-serif'
   ctx.fillStyle = C.chalk
   const abW = ctx.measureText('AB').width
@@ -210,44 +208,43 @@ async function downloadCard(props: ProofCardProps) {
   ctx.fillStyle = C.signal
   ctx.fillText('TALKS', 56 + abW, 56)
 
-  // ── "60-Day Challenge" top-right ──
+  // "60-Day Challenge" top-right
   ctx.font = '500 11px monospace'
   ctx.fillStyle = C.ash
   ctx.textAlign = 'right'
   ctx.fillText('60-DAY CHALLENGE  ·  BUILD IN PUBLIC', W - 56, 56)
   ctx.textAlign = 'left'
 
-  // ── Divider under header ──
+  // Divider under header
   ctx.fillStyle = C.rim
   ctx.fillRect(56, 70, W - 112, 1)
 
+  // Giant day number
   ctx.font = `bold 148px system-ui, sans-serif`
   const dayGrd = ctx.createLinearGradient(56, 0, 56 + 600, 0)
   dayGrd.addColorStop(0,   C.chalk)
   dayGrd.addColorStop(0.6, C.chalk)
   dayGrd.addColorStop(1,   'rgba(240,237,230,0.4)')
   ctx.fillStyle = dayGrd
-  // letterSpacing is a newer Canvas API — safe fallback
   if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '-6px'
   ctx.fillText(`Day ${props.dayNumber}`, 56, 240)
 
+  // Day title
   ctx.font = '300 22px system-ui, sans-serif'
   ctx.fillStyle = C.ash
   if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0px'
   ctx.fillText(truncate(props.dayTitle, 72), 56, 278)
 
-  // ── Chain links ──
-  const chainY   = 358
-  const linkR    = 22
-  const connW    = 18
-  let   cx       = 56
+  // Chain links
+  const chainY = 358
+  const linkR  = 22
+  const connW  = 18
+  let   cx     = 56
 
   props.chainWindow.forEach((link, i) => {
     const color  = linkColor(link.status)
     const filled = isFilled(link.status)
-    const isToday = link.status === 'today'
 
-    // connector
     if (i > 0) {
       const prevColor = linkColor(props.chainWindow[i - 1].status)
       const prevFilled = isFilled(props.chainWindow[i - 1].status)
@@ -258,7 +255,6 @@ async function downloadCard(props: ProofCardProps) {
       ctx.fillRect(cx - connW, chainY - 1.5, connW, 3)
     }
 
-    // outer glow
     if (filled) {
       ctx.save()
       ctx.beginPath()
@@ -268,14 +264,12 @@ async function downloadCard(props: ProofCardProps) {
       ctx.restore()
     }
 
-    // ring
     ctx.beginPath()
     ctx.arc(cx + linkR, chainY, linkR, 0, Math.PI * 2)
     ctx.strokeStyle = color
     ctx.lineWidth = 2.5
     ctx.stroke()
 
-    // fill halo
     if (filled) {
       ctx.beginPath()
       ctx.arc(cx + linkR, chainY, linkR, 0, Math.PI * 2)
@@ -283,7 +277,6 @@ async function downloadCard(props: ProofCardProps) {
       ctx.fill()
     }
 
-    // inner dot
     if (filled) {
       ctx.beginPath()
       ctx.arc(cx + linkR, chainY, linkR * 0.38, 0, Math.PI * 2)
@@ -291,7 +284,6 @@ async function downloadCard(props: ProofCardProps) {
       ctx.fill()
     }
 
-    // day label below
     ctx.font = '9px monospace'
     ctx.fillStyle = filled ? `${color}CC` : C.rim
     ctx.textAlign = 'center'
@@ -301,17 +293,18 @@ async function downloadCard(props: ProofCardProps) {
     cx += linkR * 2 + connW
   })
 
+  // "Your chain" label
   ctx.font = '10px monospace'
   ctx.fillStyle = `${C.ash}99`
   if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0.18em'
   ctx.fillText('YOUR CHAIN', 56, chainY - linkR - 14)
   if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0px'
 
-  // ── Divider above footer ──
+  // Divider above footer
   ctx.fillStyle = C.rim
   ctx.fillRect(56, H - 110, W - 112, 1)
 
-  // ── Student name ──
+  // Student name
   ctx.font = `bold 20px system-ui, sans-serif`
   ctx.fillStyle = C.chalk
   ctx.fillText(props.studentName, 56, H - 72)
@@ -322,7 +315,7 @@ async function downloadCard(props: ProofCardProps) {
   ctx.fillText(props.trackLabel.toUpperCase(), 56, H - 52)
   if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0px'
 
-  // ── Streak badge ──
+  // Streak badge
   const bW = 130, bH = 56, bX = W - 56 - bW, bY = H - 56 - bH + 8
   ctx.fillStyle = `${C.signal}12`
   ctx.strokeStyle = `${C.signal}40`
@@ -344,19 +337,234 @@ async function downloadCard(props: ProofCardProps) {
   ctx.textAlign = 'left'
   if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0px'
 
-  // ── Site footer ──
+  // Site footer
   ctx.font = '10px monospace'
   ctx.fillStyle = `${C.ash}55`
   ctx.textAlign = 'right'
   ctx.fillText('abtalks.vercel.app', W - 56, H - 16)
   ctx.textAlign = 'left'
 
-  // ── Download ──
+  // Download trigger
   const url = canvas.toDataURL('image/png')
   const a   = document.createElement('a')
   a.download = `abtalks-day-${props.dayNumber}-proof.png`
   a.href = url
   a.click()
+}
+
+// ─── PDF Proof Certificate Generator ─────────────────────────────────────────
+// Opens a dedicated, beautifully styled landscape certificate print view
+// configured for automatic native PDF export via window.print()
+function downloadPDF(props: ProofCardProps) {
+  const printWindow = window.open('', '_blank')
+  if (!printWindow) return
+
+  const dateStr = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <title>ABTalks Proof Certificate — Day ${props.dayNumber}</title>
+      <style>
+        @page {
+          size: A4 landscape;
+          margin: 0;
+        }
+        @media print {
+          body {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+          width: 100vw;
+          height: 100vh;
+          background: #0A0A0A;
+          color: #F0EDE6;
+          font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 30px;
+        }
+        .cert-border {
+          width: 100%;
+          height: 100%;
+          border: 3px solid #F4B942;
+          padding: 8px;
+          border-radius: 16px;
+          position: relative;
+          background: #111111;
+          box-shadow: 0 0 50px rgba(244, 185, 66, 0.15);
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+        .cert-inner {
+          border: 1px solid #222222;
+          height: 100%;
+          border-radius: 12px;
+          padding: 40px 50px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          position: relative;
+          background: radial-gradient(ellipse 70% 60% at 85% 20%, rgba(244,185,66,0.08) 0%, transparent 70%);
+        }
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+        .brand {
+          font-weight: 800;
+          font-size: 24px;
+          letter-spacing: -0.5px;
+          color: #F0EDE6;
+        }
+        .brand span { color: #F4B942; }
+        .cert-type {
+          font-family: monospace;
+          font-size: 11px;
+          letter-spacing: 3px;
+          color: #5A5A5A;
+          text-transform: uppercase;
+        }
+        .hero {
+          margin-top: 20px;
+        }
+        .badge-title {
+          font-family: monospace;
+          color: #F4B942;
+          font-size: 12px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          margin-bottom: 10px;
+        }
+        .day-title {
+          font-size: 56px;
+          font-weight: 800;
+          line-height: 1;
+          letter-spacing: -2px;
+          color: #F0EDE6;
+        }
+        .task-name {
+          font-size: 20px;
+          color: #5A5A5A;
+          margin-top: 10px;
+          font-weight: 300;
+        }
+        .student-section {
+          margin-top: 30px;
+          padding-top: 25px;
+          border-top: 1px solid #222222;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+        }
+        .student-name {
+          font-size: 28px;
+          font-weight: 700;
+          color: #F0EDE6;
+        }
+        .track-label {
+          font-family: monospace;
+          font-size: 12px;
+          letter-spacing: 2px;
+          color: #5A5A5A;
+          margin-top: 4px;
+          text-transform: uppercase;
+        }
+        .streak-pill {
+          background: rgba(244, 185, 66, 0.1);
+          border: 1px solid rgba(244, 185, 66, 0.3);
+          padding: 12px 24px;
+          border-radius: 12px;
+          text-align: center;
+        }
+        .streak-val {
+          font-size: 32px;
+          font-weight: 800;
+          color: #F4B942;
+          line-height: 1;
+        }
+        .streak-lbl {
+          font-family: monospace;
+          font-size: 9px;
+          letter-spacing: 2px;
+          color: #5A5A5A;
+          margin-top: 4px;
+        }
+        .footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-family: monospace;
+          font-size: 10px;
+          color: #5A5A5A;
+          border-top: 1px solid #222222;
+          padding-top: 15px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="cert-border">
+        <div class="cert-inner">
+          <div class="header">
+            <div>
+              <div class="brand">AB<span>TALKS</span></div>
+              <div class="cert-type">Official Build Proof Certificate</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="cert-type">60-Day Challenge</div>
+              <div style="font-family: monospace; font-size: 10px; color: #5A5A5A; margin-top: 4px;">Date: ${dateStr}</div>
+            </div>
+          </div>
+
+          <div class="hero">
+            <div class="badge-title">✓ Milestone Verified · Day ${props.dayNumber}</div>
+            <div class="day-title">Day ${props.dayNumber} Completed</div>
+            <div class="task-name">${props.dayTitle}</div>
+          </div>
+
+          <div class="student-section">
+            <div>
+              <div style="font-family: monospace; font-size: 10px; color: #5A5A5A; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px;">Issued To</div>
+              <div class="student-name">${props.studentName}</div>
+              <div class="track-label">${props.trackLabel} Track</div>
+            </div>
+            <div class="streak-pill">
+              <div class="streak-val">${props.streakCount}</div>
+              <div class="streak-lbl">DAY STREAK</div>
+            </div>
+          </div>
+
+          <div class="footer">
+            <div>Verified Record ID: ABT-PROOF-${props.dayNumber}-${Date.now().toString(36).toUpperCase()}</div>
+            <div>abtalks.vercel.app · Built in public</div>
+          </div>
+        </div>
+      </div>
+      <script>
+        window.onload = function() {
+          setTimeout(function() {
+            window.print();
+          }, 300);
+        };
+      </script>
+    </body>
+    </html>
+  `
+
+  printWindow.document.write(html)
+  printWindow.document.close()
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -384,11 +592,15 @@ function roundRect(
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function ProofCard(props: ProofCardProps) {
   const { dayNumber, dayTitle, studentName, trackLabel, streakCount, chainWindow } = props
-  const [downloading, setDownloading] = useState(false)
+  const [downloadingPNG, setDownloadingPNG] = useState(false)
 
-  const handleDownload = async () => {
-    setDownloading(true)
-    try { await downloadCard(props) } finally { setDownloading(false) }
+  const handleDownloadPNG = async () => {
+    setDownloadingPNG(true)
+    try { await downloadPNG(props) } finally { setDownloadingPNG(false) }
+  }
+
+  const handleDownloadPDF = () => {
+    downloadPDF(props)
   }
 
   return (
@@ -400,9 +612,7 @@ export default function ProofCard(props: ProofCardProps) {
     >
 
       {/* ════════════════════════════════════════════════════════════════
-          THE CARD — This is the visual artefact.
-          Dark glass with radial gold glow, oversized day number,
-          chain strip as the hero visual, student info in footer bar.
+          THE CARD — Visual Artifact
       ════════════════════════════════════════════════════════════════ */}
       <div
         id="proof-card"
@@ -413,14 +623,13 @@ export default function ProofCard(props: ProofCardProps) {
           boxShadow: `0 0 0 1px ${C.rim}, 0 24px 64px rgba(0,0,0,0.7), 0 0 80px ${C.signal}0A`,
         }}
       >
-        {/* ── Ambient radial glow (top-right) — matches hero section ── */}
+        {/* Ambient glows */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background: `radial-gradient(ellipse 70% 60% at 88% 15%, ${C.signal}0D 0%, transparent 65%)`,
           }}
         />
-        {/* ── Ambient green glow (bottom-left) ── */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -428,7 +637,7 @@ export default function ProofCard(props: ProofCardProps) {
           }}
         />
 
-        {/* ── Gold top bar with shimmer ── */}
+        {/* Gold top bar with shimmer */}
         <div className="h-[3px] relative overflow-hidden">
           <div
             className="absolute inset-0"
@@ -447,9 +656,8 @@ export default function ProofCard(props: ProofCardProps) {
 
         <div className="relative px-5 sm:px-7 pt-5 pb-5">
 
-          {/* ── Top row: brand left · badge right ── */}
+          {/* Top row: brand left · badge right */}
           <div className="flex items-start justify-between gap-4 mb-6">
-            {/* Brand */}
             <div>
               <p
                 className="font-display font-bold"
@@ -495,7 +703,7 @@ export default function ProofCard(props: ProofCardProps) {
             </motion.div>
           </div>
 
-          {/* ── Day number — the hero typographic element ── */}
+          {/* Day number */}
           <motion.div
             initial={{ opacity: 0, x: -12 }}
             animate={{ opacity: 1, x: 0 }}
@@ -520,7 +728,7 @@ export default function ProofCard(props: ProofCardProps) {
             </p>
           </motion.div>
 
-          {/* ── Chain strip ── */}
+          {/* Chain strip */}
           <div className="mt-7 mb-6">
             <p
               className="font-mono uppercase mb-3"
@@ -568,7 +776,7 @@ export default function ProofCard(props: ProofCardProps) {
             </div>
           </div>
 
-          {/* ── Footer info bar ── */}
+          {/* Footer info bar */}
           <div
             className="flex items-center justify-between gap-3 px-4 py-3 -mx-1 rounded-[8px]"
             style={{
@@ -602,24 +810,60 @@ export default function ProofCard(props: ProofCardProps) {
         </div>
       </div>
 
-      {/* ── Action buttons ── */}
-      <div className="flex items-center gap-3">
+      {/* ── Action buttons: PNG & PDF Download ── */}
+      <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
+        {/* PDF Certificate Download Button */}
         <motion.button
-          id="download-proof-card"
-          onClick={handleDownload}
-          disabled={downloading}
-          whileHover={downloading ? {} : { opacity: 0.92 }}
-          whileTap={downloading ? {} : { scale: 0.97 }}
-          className="flex-1 flex items-center justify-center gap-2 rounded-pill py-3 font-display font-bold transition-all"
+          id="download-pdf-proof"
+          onClick={handleDownloadPDF}
+          whileHover={{ opacity: 0.94 }}
+          whileTap={{ scale: 0.97 }}
+          className="flex-1 flex items-center justify-center gap-2 rounded-pill py-3 px-4 font-display font-bold transition-all"
           style={{
             fontSize: 13,
-            background: downloading ? C.graphite : C.signal,
-            color: downloading ? C.ash : C.ink,
+            background: 'linear-gradient(135deg, #F4B942 0%, #C49030 100%)',
+            color: '#0A0A0A',
             border: 'none',
-            cursor: downloading ? 'not-allowed' : 'pointer',
+            boxShadow: '0 4px 14px rgba(244, 185, 66, 0.25)',
+            cursor: 'pointer',
           }}
         >
-          {downloading ? (
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M14 2v6h6M12 18v-6M9 15l3 3 3-3"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          Download PDF Certificate
+        </motion.button>
+
+        {/* PNG Image Download Button */}
+        <motion.button
+          id="download-png-proof"
+          onClick={handleDownloadPNG}
+          disabled={downloadingPNG}
+          whileHover={downloadingPNG ? {} : { opacity: 0.9 }}
+          whileTap={downloadingPNG ? {} : { scale: 0.97 }}
+          className="flex-1 flex items-center justify-center gap-2 rounded-pill py-3 px-4 font-display font-bold transition-all"
+          style={{
+            fontSize: 12.5,
+            background: 'var(--graphite)',
+            color: 'var(--chalk)',
+            border: '1px solid var(--rim)',
+            cursor: downloadingPNG ? 'not-allowed' : 'pointer',
+          }}
+        >
+          {downloadingPNG ? (
             <>
               <motion.span
                 className="inline-block w-3.5 h-3.5 rounded-full border-2"
@@ -627,7 +871,7 @@ export default function ProofCard(props: ProofCardProps) {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 0.65, repeat: Infinity, ease: 'linear' }}
               />
-              Generating…
+              Generating PNG…
             </>
           ) : (
             <>
@@ -640,17 +884,10 @@ export default function ProofCard(props: ProofCardProps) {
                   strokeLinejoin="round"
                 />
               </svg>
-              Download Card
+              Download PNG Image
             </>
           )}
         </motion.button>
-
-        <p
-          className="font-mono flex-shrink-0"
-          style={{ fontSize: 8.5, letterSpacing: '0.1em', color: `${C.ash}66` }}
-        >
-          1200 × 628 · LinkedIn ready
-        </p>
       </div>
 
     </motion.div>

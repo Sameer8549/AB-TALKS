@@ -1,13 +1,19 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import NavBar from '@/components/NavBar'
 import ProofSubmitForm from '@/components/ProofSubmitForm'
 import ProofCard from '@/components/ProofCard'
-import { days, student, streak } from '@/data/mockData'
+import {
+  days as normalDays,
+  student as normalStudent,
+  streak as normalStreak,
+  edgeCase_emptyProfile,
+  edgeCase_missedDay,
+} from '@/data/mockData'
 import type { DayTask } from '@/data/mockData'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -207,6 +213,21 @@ export default function DayDetailPage() {
   const dayNum  = parseInt(params.id as string, 10)
   const [reqOpen, setReqOpen] = useState(true)
   const [submitted, setSubmitted] = useState(false)
+
+  // ── Respect dashboard demo-state via sessionStorage ──────────────────────
+  type DemoKey = 'normal' | 'new' | 'missed'
+  const [demoState, setDemoState] = useState<DemoKey>('normal')
+  useEffect(() => {
+    const s = sessionStorage.getItem('abtalks_demo_state') as DemoKey | null
+    if (s === 'normal' || s === 'new' || s === 'missed') setDemoState(s)
+  }, [])
+
+  const DATA_MAP = {
+    normal: { days: normalDays, student: normalStudent, streak: normalStreak },
+    new:    { days: edgeCase_emptyProfile.days, student: edgeCase_emptyProfile.student, streak: edgeCase_emptyProfile.streak },
+    missed: { days: edgeCase_missedDay.days,    student: edgeCase_missedDay.student,    streak: edgeCase_missedDay.streak    },
+  }
+  const { days, student, streak } = DATA_MAP[demoState]
 
   // Find the day
   const day = days.find(d => d.day === dayNum)
@@ -432,7 +453,19 @@ export default function DayDetailPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            {isCompleted && <ProofPanel day={day} />}
+            {isCompleted && (
+              <>
+                <ProofPanel day={day} />
+                <ProofCard
+                  dayNumber={day.day}
+                  dayTitle={day.title}
+                  studentName={student.name}
+                  trackLabel={student.trackLabel}
+                  streakCount={streak.current}
+                  chainWindow={chainWindow}
+                />
+              </>
+            )}
             {isToday && !submitted && (
               <ProofSubmitForm
                 dayNumber={day.day}

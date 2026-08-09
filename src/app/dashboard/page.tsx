@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import Link from 'next/link'
 import NavBar from '@/components/NavBar'
 import StreakCard from '@/components/StreakCard'
+import ProofCard from '@/components/ProofCard'
 import { ACH_ICONS } from '@/components/AchievementIcons'
 import {
   student as normalStudent, streak as normalStreak,
@@ -240,7 +241,7 @@ function RecoveryForm({ day }: { day: DayTask }) {
 }
 
 // ─── Submit form (for today's task) ──────────────────────────────────────────
-function SubmitForm({ day }: { day: DayTask }) {
+function SubmitForm({ day, onSuccess }: { day: DayTask; onSuccess?: () => void }) {
   const [github, setGithub] = useState('')
   const [linkedin, setLinkedin] = useState('')
   const [loading, setLoading] = useState(false)
@@ -269,7 +270,7 @@ function SubmitForm({ day }: { day: DayTask }) {
   }
 
   return (
-    <form onSubmit={async e => { e.preventDefault(); if (!valid) return; setLoading(true); await new Promise(r => setTimeout(r, 1200)); setLoading(false); setDone(true) }}
+    <form onSubmit={async e => { e.preventDefault(); if (!valid) return; setLoading(true); await new Promise(r => setTimeout(r, 1200)); setLoading(false); setDone(true); onSuccess?.() }}
       className="mt-5 flex flex-col gap-3">
       <p className="font-mono text-ash uppercase" style={{ fontSize: 8.5, letterSpacing: '0.2em' }}>Submit Your Proof</p>
       {(['github', 'linkedin'] as const).map(field => (
@@ -373,6 +374,7 @@ export default function DashboardPage() {
   const [demoState, setDemoState] = useState<DemoState>('normal')
   const [reqOpen, setReqOpen] = useState(true)
   const [showRepair, setShowRepair] = useState(false)
+  const [todaySubmitted, setTodaySubmitted] = useState(false)
   const repairRef = { current: null as HTMLDivElement | null }
 
   // Data source — switches with demo state
@@ -408,6 +410,19 @@ export default function DashboardPage() {
     chainDays.push({ day: chainDays.length + 1, status: 'upcoming' as CellStatus, task: null })
   }
 
+  // Chain window for ProofCard — 7 links centred on today's task day
+  const todayNum      = todayTask?.day ?? 1
+  const pcStart       = Math.max(1, todayNum - 3)
+  const pcEnd         = Math.min(60, pcStart + 6)
+  const proofChainWindow = Array.from({ length: pcEnd - pcStart + 1 }, (_, i) => {
+    const d     = pcStart + i
+    const found = days.find(x => x.day === d)
+    return {
+      day: d,
+      status: (found?.status ?? 'upcoming') as 'completed' | 'recovered' | 'today' | 'upcoming' | 'missed',
+    }
+  })
+
   const handleRepairClick = () => {
     setShowRepair(true)
     setTimeout(() => {
@@ -419,6 +434,8 @@ export default function DashboardPage() {
   useEffect(() => {
     setShowRepair(false)
     setReqOpen(true)
+    setTodaySubmitted(false)
+    sessionStorage.setItem('abtalks_demo_state', demoState)
   }, [demoState])
 
   return (
@@ -676,7 +693,7 @@ export default function DashboardPage() {
                   </div>
                 )}
                 <div className="my-5 h-px" style={{ background: 'var(--rim)' }} />
-                <SubmitForm day={todayTask} />
+                <SubmitForm day={todayTask} onSuccess={() => setTimeout(() => setTodaySubmitted(true), 1500)} />
               </div>
             </motion.article>
           ) : (
@@ -687,6 +704,18 @@ export default function DashboardPage() {
               <p className="font-display font-bold text-chalk" style={{ fontSize: 18 }}>All caught up</p>
               <p className="font-body text-ash" style={{ fontSize: 13 }}>No task is pending today. Check back tomorrow.</p>
             </motion.div>
+          )}
+
+          {/* ProofCard — slides in after successful submission */}
+          {todaySubmitted && todayTask && (
+            <ProofCard
+              dayNumber={todayTask.day}
+              dayTitle={isNewStudent ? 'First link in the chain.' : todayTask.title}
+              studentName={student.name}
+              trackLabel={student.trackLabel}
+              streakCount={streak.current + 1}
+              chainWindow={proofChainWindow}
+            />
           )}
 
           {/* ── RECENT HISTORY ── */}

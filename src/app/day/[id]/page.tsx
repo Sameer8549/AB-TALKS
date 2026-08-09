@@ -164,7 +164,7 @@ function MissedPanel({ day }: { day: DayTask }) {
         </div>
         {expired ? (
           <p className="font-body text-ash leading-relaxed" style={{ fontSize: 12 }}>
-            The recovery window has closed. This day is a permanent scar on your chain — but your chain continues. Don't let the next one crack.
+            The recovery window has closed. This day is a permanent scar on your chain — but your chain continues from here.
           </p>
         ) : (
           <Link href="/dashboard"
@@ -339,7 +339,7 @@ export default function DayDetailPage() {
             <div className="rounded-card p-5 sm:p-6"
               style={{ background: 'var(--coal)', border: '1px solid var(--rim)' }}>
               <p className="font-mono text-ash uppercase mb-3" style={{ fontSize: 8.5, letterSpacing: '0.2em' }}>
-                {isUpcoming ? 'Status' : 'The Challenge'}
+                {isUpcoming ? 'Status' : isCompleted ? 'Your Work' : 'Today’s Task'}
               </p>
               <p className="font-body text-chalk leading-relaxed" style={{ fontSize: 14 }}>
                 {day.description}

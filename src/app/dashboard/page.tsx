@@ -473,7 +473,7 @@ export default function DashboardPage() {
                       Your chain starts <span className="text-signal">today.</span>
                     </p>
                     <p className="font-body text-ash mt-1" style={{ fontSize: 12 }}>
-                      Every great streak begins with Day 1. Don't let it end there.
+                      The chain starts with a single link. Day 1 is the hardest one to build.
                     </p>
                   </motion.div>
                 ) : (
@@ -734,8 +734,8 @@ export default function DashboardPage() {
                 <span style={{ fontSize: 16 }}>📋</span>
               </div>
               <div>
-                <p className="font-body text-ash" style={{ fontSize: 12 }}>Your history will appear here after your first submission.</p>
-                <p className="font-mono text-ash/50 mt-0.5" style={{ fontSize: 10 }}>Complete Day 1 to start building your record.</p>
+                <p className="font-body text-ash" style={{ fontSize: 12 }}>Each completed day becomes a link in your chain — your history will appear here.</p>
+                <p className="font-mono text-ash/50 mt-0.5" style={{ fontSize: 10 }}>Submit Day 1 to lay the first link.</p>
               </div>
             </motion.div>
           )}

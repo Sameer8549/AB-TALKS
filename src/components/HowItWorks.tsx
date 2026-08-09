@@ -15,7 +15,12 @@ const STEPS = [
   {
     verb: 'Prove.',
     description:
-      'A GitHub commit and a LinkedIn post. Every day. Your streak is your public record.',
+      'A GitHub commit and a LinkedIn post. Every day. Your streak is your public record — and the chain is what you’re protecting.',
+  },
+  {
+    verb: 'Repair.',
+    description:
+      'Miss a day? You have a 24-hour window to submit late. A repaired link shows as a gold seam, not a break. The chain doesn’t punish — it recovers.',
   },
 ]
 

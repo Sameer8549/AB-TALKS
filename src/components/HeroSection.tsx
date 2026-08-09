@@ -55,7 +55,7 @@ export default function HeroSection() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}
             >
-              Every. Single. Day.
+              One link a day. Don't break the chain.
             </motion.p>
 
             <motion.p
@@ -65,8 +65,8 @@ export default function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.28, duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
             >
-              Pick a track. Commit daily. Post proof. The challenge where
-              Indian college students forge a coding habit that actually sticks.
+              Pick a track. Build something real every day. Post the proof.
+              The chain adapts to where you are — the goal is to keep it unbroken.
             </motion.p>
 
             <motion.div

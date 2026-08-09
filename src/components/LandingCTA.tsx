@@ -34,8 +34,9 @@ export default function LandingCTA() {
         </h2>
 
         <p className="font-body text-ash text-base sm:text-lg mt-8 mb-10 max-w-[22rem] leading-relaxed">
-          You don&apos;t need a perfect plan. You need a first commit.
-          Sixty days from today, you&apos;ll have proof.
+          Start the chain. The platform tracks your progress, softens when
+          you’re tired, and gives you a window to repair a missed day.
+          Sixty days from today, you’ll have real proof.
         </p>
 
         <Link
@@ -51,7 +52,7 @@ export default function LandingCTA() {
           className="font-mono text-ash/35 uppercase mt-8"
           style={{ fontSize: 10, letterSpacing: '0.2em' }}
         >
-          60 days · GitHub commit · LinkedIn post · Every day
+          60 days · GitHub commit · LinkedIn post · Recovery Grace
         </p>
       </div>
     </section>

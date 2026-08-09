@@ -2,7 +2,11 @@
 
 This document serves as the **Authenticity & AI Assistance Log** for Stage 2 Hackathon evaluation. It provides a chronologically accurate, step-by-step trace of how AI assistance was leveraged alongside manual architectural engineering, code review, and testing during the development of the ABTalks Redesign, mapped directly to real-time git commit history.
 
-> 📜 **Live Prompt Viewer**: You can also view the full raw prompt transcript directly in your browser at [`/prompts`](https://abtalksredesign.vercel.app/prompts).
+> 📜 **Authenticity & AI Assistance Log**: Below is the step-by-step trace of commits mapped to real-time git history.
+>
+> 👈 **[Click Here to View the Full Uncut Prompt History Transcript (`public/Redesigning ABTalks Platform.md`)](./public/Redesigning%20ABTalks%20Platform.md)**
+>
+> 🌐 **[Click Here for Live Web Browser Prompt Viewer](https://abtalksredesign.vercel.app/prompts)**
 
 ---
 

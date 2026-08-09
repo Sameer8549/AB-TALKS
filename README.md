@@ -123,7 +123,9 @@ Visit [`http://localhost:3000`](http://localhost:3000) or test the live producti
 
 ## 📄 Hackathon Submission & AI Logs
 
-* **Full Prompt History & AI Transcripts**: [`PROMPTS.md`](./PROMPTS.md)
+* **Full Commit Log & AI History**: [`PROMPTS.md`](./PROMPTS.md)
+* **Raw Prompt Chat Transcript (3,137 lines)**: 👉 **[`public/Redesigning ABTalks Platform.md`](./public/Redesigning%20ABTalks%20Platform.md)**
+* **Live Web Browser Prompt Viewer**: 👉 **[`https://abtalksredesign.vercel.app/prompts`](https://abtalksredesign.vercel.app/prompts)**
 * **Product Architecture Notes**: [`NOTES.md`](./NOTES.md)
 
 ---

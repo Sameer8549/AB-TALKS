@@ -24,7 +24,7 @@ const C = {
   coal:      '#111111',
   graphite:  '#1C1C1C',
   chalk:     '#F0EDE6',
-  ash:       '#5A5A5A',
+  ash:       '#6B7191',
   signal:    '#F4B942',
   signalDim: '#C07820',
   green:     '#22C55E',
@@ -162,13 +162,16 @@ function Connector({ left, right }: { left: ChainLink; right: ChainLink }) {
   )
 }
 
-// ─── Canvas download (PNG image) ──────────────────────────────────────────────
+// ─── Canvas download (PNG image) — Pixel-perfect alignment ────────────────────
 async function downloadPNG(props: ProofCardProps) {
   const W = 1200, H = 628, S = 2
   const canvas = document.createElement('canvas')
   canvas.width = W * S; canvas.height = H * S
   const ctx = canvas.getContext('2d')!
   ctx.scale(S, S)
+
+  // Explicit text baseline for rock-solid vertical alignment
+  ctx.textBaseline = 'alphabetic'
 
   // Background
   ctx.fillStyle = C.coal
@@ -201,46 +204,48 @@ async function downloadPNG(props: ProofCardProps) {
   ctx.fillRect(0, H - 1, W, 1)
 
   // Brand top-left
-  ctx.font = 'bold 18px system-ui, sans-serif'
+  ctx.font = 'bold 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
   ctx.fillStyle = C.chalk
   const abW = ctx.measureText('AB').width
-  ctx.fillText('AB', 56, 56)
+  ctx.fillText('AB', 56, 52)
   ctx.fillStyle = C.signal
-  ctx.fillText('TALKS', 56 + abW, 56)
+  ctx.fillText('TALKS', 56 + abW + 2, 52)
 
   // "60-Day Challenge" top-right
-  ctx.font = '500 11px monospace'
+  ctx.font = '600 11px ui-monospace, SFMono-Regular, Menlo, Monaco, monospace'
   ctx.fillStyle = C.ash
   ctx.textAlign = 'right'
-  ctx.fillText('60-DAY CHALLENGE  ·  BUILD IN PUBLIC', W - 56, 56)
+  ctx.fillText('60-DAY CHALLENGE  ·  BUILD IN PUBLIC', W - 56, 52)
   ctx.textAlign = 'left'
 
   // Divider under header
   ctx.fillStyle = C.rim
-  ctx.fillRect(56, 70, W - 112, 1)
+  ctx.fillRect(56, 72, W - 112, 1)
 
   // Giant day number
-  ctx.font = `bold 148px system-ui, sans-serif`
-  const dayGrd = ctx.createLinearGradient(56, 0, 56 + 600, 0)
+  ctx.font = 'bold 130px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+  const dayGrd = ctx.createLinearGradient(56, 0, 56 + 500, 0)
   dayGrd.addColorStop(0,   C.chalk)
-  dayGrd.addColorStop(0.6, C.chalk)
-  dayGrd.addColorStop(1,   'rgba(240,237,230,0.4)')
+  dayGrd.addColorStop(0.7, C.chalk)
+  dayGrd.addColorStop(1,   'rgba(240,237,230,0.5)')
   ctx.fillStyle = dayGrd
-  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '-6px'
-  ctx.fillText(`Day ${props.dayNumber}`, 56, 240)
+  ctx.fillText(`Day ${props.dayNumber}`, 56, 210)
 
   // Day title
-  ctx.font = '300 22px system-ui, sans-serif'
+  ctx.font = '400 20px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
   ctx.fillStyle = C.ash
-  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0px'
-  ctx.fillText(truncate(props.dayTitle, 72), 56, 278)
+  ctx.fillText(truncate(props.dayTitle, 75), 56, 252)
 
-  // Chain links
-  const chainY = 358
+  // "YOUR CHAIN" label
+  const chainY = 360
   const linkR  = 22
   const connW  = 18
-  let   cx     = 56
+  ctx.font = '600 10px ui-monospace, SFMono-Regular, Menlo, Monaco, monospace'
+  ctx.fillStyle = `${C.ash}CC`
+  ctx.fillText('YOUR CHAIN', 56, chainY - linkR - 16)
 
+  // Chain links & connectors
+  let cx = 56
   props.chainWindow.forEach((link, i) => {
     const color  = linkColor(link.status)
     const filled = isFilled(link.status)
@@ -284,38 +289,31 @@ async function downloadPNG(props: ProofCardProps) {
       ctx.fill()
     }
 
-    ctx.font = '9px monospace'
-    ctx.fillStyle = filled ? `${color}CC` : C.rim
+    // Day numbers below links
+    ctx.font = '600 10px ui-monospace, SFMono-Regular, Menlo, Monaco, monospace'
+    ctx.fillStyle = filled ? `${color}DD` : C.ash
     ctx.textAlign = 'center'
-    ctx.fillText(`${link.day}`, cx + linkR, chainY + linkR + 14)
+    ctx.fillText(`${link.day}`, cx + linkR, chainY + linkR + 18)
     ctx.textAlign = 'left'
 
     cx += linkR * 2 + connW
   })
-
-  // "Your chain" label
-  ctx.font = '10px monospace'
-  ctx.fillStyle = `${C.ash}99`
-  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0.18em'
-  ctx.fillText('YOUR CHAIN', 56, chainY - linkR - 14)
-  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0px'
 
   // Divider above footer
   ctx.fillStyle = C.rim
   ctx.fillRect(56, H - 110, W - 112, 1)
 
   // Student name
-  ctx.font = `bold 20px system-ui, sans-serif`
+  ctx.font = 'bold 20px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
   ctx.fillStyle = C.chalk
-  ctx.fillText(props.studentName, 56, H - 72)
+  ctx.fillText(props.studentName, 56, H - 68)
 
-  ctx.font = '11px monospace'
+  // Track label
+  ctx.font = '600 11px ui-monospace, SFMono-Regular, Menlo, Monaco, monospace'
   ctx.fillStyle = C.ash
-  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0.1em'
-  ctx.fillText(props.trackLabel.toUpperCase(), 56, H - 52)
-  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0px'
+  ctx.fillText(props.trackLabel.toUpperCase(), 56, H - 46)
 
-  // Streak badge
+  // Streak badge (right aligned, pixel perfect)
   const bW = 130, bH = 56, bX = W - 56 - bW, bY = H - 56 - bH + 8
   ctx.fillStyle = `${C.signal}12`
   ctx.strokeStyle = `${C.signal}40`
@@ -325,26 +323,24 @@ async function downloadPNG(props: ProofCardProps) {
   roundRect(ctx, bX, bY, bW, bH, 10)
   ctx.stroke()
 
-  ctx.font = `bold 32px system-ui, sans-serif`
+  ctx.font = 'bold 30px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
   ctx.fillStyle = C.signal
   ctx.textAlign = 'center'
-  ctx.fillText(`${props.streakCount}`, bX + bW / 2, bY + 34)
+  ctx.fillText(`${props.streakCount}`, bX + bW / 2, bY + 32)
 
-  ctx.font = '9px monospace'
+  ctx.font = '600 9px ui-monospace, SFMono-Regular, Menlo, Monaco, monospace'
   ctx.fillStyle = C.ash
-  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0.12em'
-  ctx.fillText('DAY STREAK', bX + bW / 2, bY + 50)
+  ctx.fillText('DAY STREAK', bX + bW / 2, bY + 47)
   ctx.textAlign = 'left'
-  if ('letterSpacing' in ctx) (ctx as any).letterSpacing = '0px'
 
   // Site footer
-  ctx.font = '10px monospace'
-  ctx.fillStyle = `${C.ash}55`
+  ctx.font = '500 10px ui-monospace, SFMono-Regular, Menlo, Monaco, monospace'
+  ctx.fillStyle = `${C.ash}77`
   ctx.textAlign = 'right'
-  ctx.fillText('abtalks.vercel.app', W - 56, H - 16)
+  ctx.fillText('abtalks.vercel.app', W - 56, H - 18)
   ctx.textAlign = 'left'
 
-  // Download trigger
+  // Trigger PNG Download
   const url = canvas.toDataURL('image/png')
   const a   = document.createElement('a')
   a.download = `abtalks-day-${props.dayNumber}-proof.png`
@@ -352,9 +348,7 @@ async function downloadPNG(props: ProofCardProps) {
   a.click()
 }
 
-// ─── PDF Proof Certificate Generator ─────────────────────────────────────────
-// Opens a dedicated, beautifully styled landscape certificate print view
-// configured for automatic native PDF export via window.print()
+// ─── PDF Proof Certificate Generator — Exact Printable A4 Landscape ─────────
 function downloadPDF(props: ProofCardProps) {
   const printWindow = window.open('', '_blank')
   if (!printWindow) return
@@ -377,32 +371,34 @@ function downloadPDF(props: ProofCardProps) {
           margin: 0;
         }
         @media print {
-          body {
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
+          html, body {
+            width: 297mm;
+            height: 210mm;
+            overflow: hidden;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
           }
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-          width: 100vw;
-          height: 100vh;
+          width: 297mm;
+          height: 210mm;
           background: #0A0A0A;
           color: #F0EDE6;
-          font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 30px;
+          padding: 20mm;
         }
         .cert-border {
           width: 100%;
           height: 100%;
-          border: 3px solid #F4B942;
+          border: 2px solid #F4B942;
           padding: 8px;
-          border-radius: 16px;
+          border-radius: 12px;
           position: relative;
           background: #111111;
-          box-shadow: 0 0 50px rgba(244, 185, 66, 0.15);
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -410,13 +406,13 @@ function downloadPDF(props: ProofCardProps) {
         .cert-inner {
           border: 1px solid #222222;
           height: 100%;
-          border-radius: 12px;
-          padding: 40px 50px;
+          border-radius: 8px;
+          padding: 30px 40px;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
           position: relative;
-          background: radial-gradient(ellipse 70% 60% at 85% 20%, rgba(244,185,66,0.08) 0%, transparent 70%);
+          background: radial-gradient(ellipse 70% 60% at 85% 20%, rgba(244,185,66,0.06) 0%, transparent 70%);
         }
         .header {
           display: flex;
@@ -425,92 +421,93 @@ function downloadPDF(props: ProofCardProps) {
         }
         .brand {
           font-weight: 800;
-          font-size: 24px;
+          font-size: 22px;
           letter-spacing: -0.5px;
           color: #F0EDE6;
         }
         .brand span { color: #F4B942; }
         .cert-type {
-          font-family: monospace;
-          font-size: 11px;
-          letter-spacing: 3px;
-          color: #5A5A5A;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+          font-size: 10px;
+          letter-spacing: 2px;
+          color: #6B7191;
           text-transform: uppercase;
         }
         .hero {
-          margin-top: 20px;
+          margin-top: 15px;
         }
         .badge-title {
-          font-family: monospace;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
           color: #F4B942;
-          font-size: 12px;
+          font-size: 11px;
           letter-spacing: 2px;
           text-transform: uppercase;
-          margin-bottom: 10px;
+          margin-bottom: 8px;
         }
         .day-title {
-          font-size: 56px;
+          font-size: 48px;
           font-weight: 800;
-          line-height: 1;
-          letter-spacing: -2px;
+          line-height: 1.05;
+          letter-spacing: -1px;
           color: #F0EDE6;
         }
         .task-name {
-          font-size: 20px;
-          color: #5A5A5A;
-          margin-top: 10px;
-          font-weight: 300;
+          font-size: 18px;
+          color: #6B7191;
+          margin-top: 8px;
+          font-weight: 400;
+          line-height: 1.3;
         }
         .student-section {
-          margin-top: 30px;
-          padding-top: 25px;
+          margin-top: 20px;
+          padding-top: 20px;
           border-top: 1px solid #222222;
           display: flex;
           justify-content: space-between;
           align-items: flex-end;
         }
         .student-name {
-          font-size: 28px;
+          font-size: 24px;
           font-weight: 700;
           color: #F0EDE6;
         }
         .track-label {
-          font-family: monospace;
-          font-size: 12px;
-          letter-spacing: 2px;
-          color: #5A5A5A;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+          font-size: 11px;
+          letter-spacing: 1.5px;
+          color: #6B7191;
           margin-top: 4px;
           text-transform: uppercase;
         }
         .streak-pill {
-          background: rgba(244, 185, 66, 0.1);
-          border: 1px solid rgba(244, 185, 66, 0.3);
-          padding: 12px 24px;
-          border-radius: 12px;
+          background: rgba(244, 185, 66, 0.08);
+          border: 1px solid rgba(244, 185, 66, 0.25);
+          padding: 10px 20px;
+          border-radius: 8px;
           text-align: center;
         }
         .streak-val {
-          font-size: 32px;
+          font-size: 28px;
           font-weight: 800;
           color: #F4B942;
           line-height: 1;
         }
         .streak-lbl {
-          font-family: monospace;
-          font-size: 9px;
-          letter-spacing: 2px;
-          color: #5A5A5A;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+          font-size: 8.5px;
+          letter-spacing: 1.5px;
+          color: #6B7191;
           margin-top: 4px;
         }
         .footer {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          font-family: monospace;
-          font-size: 10px;
-          color: #5A5A5A;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+          font-size: 9.5px;
+          color: #6B7191;
           border-top: 1px solid #222222;
-          padding-top: 15px;
+          padding-top: 12px;
         }
       </style>
     </head>
@@ -524,7 +521,7 @@ function downloadPDF(props: ProofCardProps) {
             </div>
             <div style="text-align: right;">
               <div class="cert-type">60-Day Challenge</div>
-              <div style="font-family: monospace; font-size: 10px; color: #5A5A5A; margin-top: 4px;">Date: ${dateStr}</div>
+              <div style="font-family: ui-monospace, monospace; font-size: 9.5px; color: #6B7191; margin-top: 3px;">Issued: ${dateStr}</div>
             </div>
           </div>
 
@@ -536,7 +533,7 @@ function downloadPDF(props: ProofCardProps) {
 
           <div class="student-section">
             <div>
-              <div style="font-family: monospace; font-size: 10px; color: #5A5A5A; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px;">Issued To</div>
+              <div style="font-family: ui-monospace, monospace; font-size: 9px; color: #6B7191; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px;">Issued To</div>
               <div class="student-name">${props.studentName}</div>
               <div class="track-label">${props.trackLabel} Track</div>
             </div>
@@ -547,7 +544,7 @@ function downloadPDF(props: ProofCardProps) {
           </div>
 
           <div class="footer">
-            <div>Verified Record ID: ABT-PROOF-${props.dayNumber}-${Date.now().toString(36).toUpperCase()}</div>
+            <div>Verified Record: ABT-PROOF-${props.dayNumber}-${Date.now().toString(36).toUpperCase()}</div>
             <div>abtalks.vercel.app · Built in public</div>
           </div>
         </div>
@@ -556,7 +553,7 @@ function downloadPDF(props: ProofCardProps) {
         window.onload = function() {
           setTimeout(function() {
             window.print();
-          }, 300);
+          }, 250);
         };
       </script>
     </body>

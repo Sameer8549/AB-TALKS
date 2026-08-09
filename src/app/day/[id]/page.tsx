@@ -6,7 +6,8 @@ import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import NavBar from '@/components/NavBar'
 import ProofSubmitForm from '@/components/ProofSubmitForm'
-import { days } from '@/data/mockData'
+import ProofCard from '@/components/ProofCard'
+import { days, student, streak } from '@/data/mockData'
 import type { DayTask } from '@/data/mockData'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -205,6 +206,7 @@ export default function DayDetailPage() {
   const router  = useRouter()
   const dayNum  = parseInt(params.id as string, 10)
   const [reqOpen, setReqOpen] = useState(true)
+  const [submitted, setSubmitted] = useState(false)
 
   // Find the day
   const day = days.find(d => d.day === dayNum)
@@ -230,6 +232,25 @@ export default function DayDetailPage() {
   const isToday     = day.status === 'today'
   const isMissed    = day.status === 'missed'
   const isCompleted = day.status === 'completed' || day.status === 'recovered'
+
+  // ── Build 7-link chain window centred on this day ────────────────────────
+  // Clamp so we always show exactly 7 links (or fewer if near start/end)
+  const windowStart = Math.max(1, dayNum - 3)
+  const windowEnd   = Math.min(60, windowStart + 6)
+  const chainWindow = Array.from({ length: windowEnd - windowStart + 1 }, (_, i) => {
+    const d = windowStart + i
+    const found = days.find(x => x.day === d)
+    // Day just submitted: override status to 'today' (completed visually)
+    if (d === dayNum && submitted) {
+      return { day: d, status: 'today' as const }
+    }
+    return {
+      day: d,
+      status: found
+        ? (found.status as 'completed' | 'recovered' | 'today' | 'upcoming' | 'missed')
+        : 'upcoming' as const,
+    }
+  })
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--ink)' }}>
@@ -412,7 +433,23 @@ export default function DayDetailPage() {
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             {isCompleted && <ProofPanel day={day} />}
-            {isToday && <ProofSubmitForm dayNumber={day.day} mode="today" />}
+            {isToday && !submitted && (
+              <ProofSubmitForm
+                dayNumber={day.day}
+                mode="today"
+                onSuccess={() => setSubmitted(true)}
+              />
+            )}
+            {isToday && submitted && (
+              <ProofCard
+                dayNumber={day.day}
+                dayTitle={day.title}
+                studentName={student.name}
+                trackLabel={student.trackLabel}
+                streakCount={streak.current + 1}
+                chainWindow={chainWindow}
+              />
+            )}
             {isMissed && <MissedPanel day={day} />}
             {isUpcoming && <UpcomingPanel />}
 

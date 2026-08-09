@@ -8,9 +8,11 @@ interface ProofSubmitFormProps {
   dayNumber: number
   /** 'today' = normal amber submit. 'recovery' = red-accented repair submit. */
   mode?: 'today' | 'recovery'
+  /** Called after the mock submission animation completes successfully. */
+  onSuccess?: () => void
 }
 
-export default function ProofSubmitForm({ dayNumber, mode = 'today' }: ProofSubmitFormProps) {
+export default function ProofSubmitForm({ dayNumber, mode = 'today', onSuccess }: ProofSubmitFormProps) {
   const [github, setGithub]     = useState('')
   const [linkedin, setLinkedin] = useState('')
   const [loading, setLoading]   = useState(false)
@@ -111,6 +113,7 @@ export default function ProofSubmitForm({ dayNumber, mode = 'today' }: ProofSubm
             await new Promise(r => setTimeout(r, 1200))
             setLoading(false)
             setDone(true)
+            onSuccess?.()
           }}
           className="flex flex-col gap-3"
         >

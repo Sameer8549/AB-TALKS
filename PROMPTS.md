@@ -2,7 +2,7 @@
 
 This document serves as the **Authenticity & AI Assistance Log** for Stage 2 Hackathon evaluation. It provides a chronologically accurate, step-by-step trace of how AI assistance was leveraged alongside manual architectural engineering, code review, and testing during the development of the ABTalks Redesign, mapped directly to real-time git commit history.
 
-> **Proof Artifact Reference**: The complete, unedited chat prompt history export file is preserved locally in the project environment at `C:\Users\abdul\Downloads\Redesigning ABTalks Platform.md`.
+> 📜 **Live Prompt Viewer**: You can also view the full raw prompt transcript directly in your browser at [`/prompts`](https://abtalksredesign.vercel.app/prompts).
 
 ---
 
@@ -357,6 +357,15 @@ This document serves as the **Authenticity & AI Assistance Log** for Stage 2 Hac
 * **Files Affected**: `src/app/icon.tsx`
 * **Verification**: Tested `npm run build` locally and confirmed page data collection succeeds for `/icon`.
 * **Commit**: `fix: add default export Icon component in src/app/icon.tsx for Next.js App Router build`
+
+#### 38. Downloadable Video Script Route (`/script`)
+* **Date/Time**: Aug 9, 2026, 11:54 AM IST (`11:54:30`)
+* **What was asked**: Create downloadable video presentation script route `/script` for presenter Pavithra with 1-click PDF script export.
+* **AI Output Used**: Printable document layout and `window.print()` trigger.
+* **Manual Review / Changes**: Configured Pavithra presenter metadata and scene voiceover timing tables.
+* **Files Affected**: `src/app/script/page.tsx`, `VIDEO_SCRIPT.md`
+* **Verification**: Navigated to `/script` and verified PDF export functionality.
+* **Commit**: `feat: add downloadable video presentation script route /script for Pavithra`
 
 ---
 

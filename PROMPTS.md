@@ -2,6 +2,8 @@
 
 This document serves as the **Authenticity & AI Assistance Log** for Stage 2 Hackathon evaluation. It provides a chronologically accurate, step-by-step trace of how AI assistance was leveraged alongside manual architectural engineering, code review, and testing during the development of the ABTalks Redesign, mapped directly to real-time git commit history.
 
+> **Proof Artifact Reference**: The complete, unedited chat prompt history export file is preserved locally in the project environment at `C:\Users\abdul\Downloads\Redesigning ABTalks Platform.md`.
+
 ---
 
 ## 📜 Development Timeline & Commit Log

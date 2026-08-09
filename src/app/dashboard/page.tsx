@@ -108,9 +108,34 @@ function DiffBadge({ level }: { level: string }) {
 }
 
 // ─── Recovery Banner ──────────────────────────────────────────────────────────
-function RecoveryBanner({ day, onRepairClick }: { day: DayTask; onRepairClick: () => void }) {
+function RecoveryBanner({ day, onRepairClick, repaired }: { day: DayTask; onRepairClick: () => void; repaired?: boolean }) {
   const timeLeft = useCountdown(day.recoveryDeadline)
   const expired = !timeLeft
+
+  if (repaired) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: 1, height: 'auto' }}
+        transition={{ duration: 0.4 }}
+        style={{ background: 'rgba(244,185,66,0.08)', borderBottom: '1px solid rgba(244,185,66,0.25)' }}
+      >
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span className="text-xl">🎉</span>
+            <div>
+              <p className="font-display font-bold" style={{ fontSize: 13, color: 'var(--signal)' }}>
+                Chain Repaired! Day {day.day} sealed with a Gold Seam.
+              </p>
+              <p className="font-mono text-ash" style={{ fontSize: 10 }}>
+                Streak restored to 5 days. Proof of resilience is live.
+              </p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    )
+  }
 
   return (
     <motion.div
@@ -172,7 +197,7 @@ function RecoveryBanner({ day, onRepairClick }: { day: DayTask; onRepairClick: (
 }
 
 // ─── Recovery form (submit proof for a missed day) ────────────────────────────
-function RecoveryForm({ day }: { day: DayTask }) {
+function RecoveryForm({ day, onSuccess }: { day: DayTask; onSuccess?: (gh: string, li: string) => void }) {
   const [github, setGithub] = useState('')
   const [linkedin, setLinkedin] = useState('')
   const [loading, setLoading] = useState(false)
@@ -193,15 +218,23 @@ function RecoveryForm({ day }: { day: DayTask }) {
           </svg>
         </motion.div>
         <div>
-          <p className="font-display font-bold text-chalk" style={{ fontSize: 14 }}>Chain repaired.</p>
-          <p className="font-body text-ash mt-0.5" style={{ fontSize: 11 }}>Day {day.day} is marked as recovered — the crack now shows a gold seam, not a break.</p>
+          <p className="font-display font-bold text-chalk" style={{ fontSize: 14 }}>Chain Repaired & Sealed!</p>
+          <p className="font-body text-ash mt-0.5" style={{ fontSize: 11 }}>Day {day.day} is marked as recovered — the crack now shows a gold seam.</p>
         </div>
       </motion.div>
     )
   }
 
   return (
-    <form onSubmit={async e => { e.preventDefault(); if (!valid) return; setLoading(true); await new Promise(r => setTimeout(r, 1200)); setLoading(false); setDone(true) }}
+    <form onSubmit={async e => {
+      e.preventDefault()
+      if (!valid) return
+      setLoading(true)
+      await new Promise(r => setTimeout(r, 1200))
+      setLoading(false)
+      setDone(true)
+      onSuccess?.(github, linkedin)
+    }}
       className="mt-4 flex flex-col gap-2.5">
       <p className="font-mono text-ash uppercase" style={{ fontSize: 8.5, letterSpacing: '0.2em' }}>Submit Repair Proof — Day {day.day}</p>
       {(['github', 'linkedin'] as const).map(field => (
@@ -377,6 +410,9 @@ export default function DashboardPage() {
   const [reqOpen, setReqOpen] = useState(true)
   const [showRepair, setShowRepair] = useState(false)
   const [todaySubmitted, setTodaySubmitted] = useState(false)
+  const [repaired, setRepaired] = useState(false)
+  const [repairGithub, setRepairGithub] = useState('')
+  const [repairLinkedin, setRepairLinkedin] = useState('')
   const repairRef = { current: null as HTMLDivElement | null }
 
   // Dynamic 24h per-session recovery deadline for Missed Day profile
@@ -398,28 +434,50 @@ export default function DashboardPage() {
   // Data source — switches with demo state
   const rawData = DATA_SOURCES[demoState]
   const student = rawData.student
-  const streak = rawData.streak
-  const achievements = rawData.achievements
 
-  // Inject dynamic 24h deadline into missed profile days
+  // Dynamically compute days based on repair / submission state
   const days = rawData.days.map((d) => {
     if (d.status === 'missed') {
+      if (repaired) {
+        return {
+          ...d,
+          status: 'recovered' as CellStatus,
+          githubUrl: repairGithub || 'https://github.com/rahulops/day-05-nginx',
+          linkedinUrl: repairLinkedin || 'https://linkedin.com/posts/rahulops_day5',
+          submittedAt: new Date().toISOString(),
+        }
+      }
       return { ...d, recoveryDeadline: missedDeadline || d.recoveryDeadline }
     }
     return d
   })
 
+  // Dynamically compute streak stats
+  const streak = {
+    ...rawData.streak,
+    current: repaired ? rawData.streak.current + 1 : rawData.streak.current,
+    totalRecovered: repaired ? rawData.streak.totalRecovered + 1 : rawData.streak.totalRecovered,
+    totalMissed: repaired ? Math.max(0, rawData.streak.totalMissed - 1) : rawData.streak.totalMissed,
+  }
+
+  // Dynamically unlock achievement when repaired
+  const achievements = rawData.achievements.map((ach) => {
+    if (ach.id === 'ach_recovered' && repaired) {
+      return { ...ach, unlockedAt: new Date().toISOString() }
+    }
+    return ach
+  })
+
   const todayTask    = days.find(d => d.status === 'today')
-  const missedDay    = days.find(d => d.status === 'missed' && !!d.recoveryDeadline)
+  const missedDay    = days.find(d => (d.status === 'missed' || (repaired && d.day === 5)) && !!d.recoveryDeadline)
   const pastDays     = days.filter(d => d.status === 'completed' || d.status === 'recovered').slice().reverse().slice(0, 5)
   const upcomingDays = days.filter(d => d.status === 'upcoming').slice(0, 3)
 
   const isNewStudent = streak.current === 0
 
   // ⚠️ Always call hooks unconditionally — Rules of Hooks
-  // useCountdown must fire every render regardless of missedDay state
   const recoveryTimeLeft = useCountdown(missedDay?.recoveryDeadline)
-  const hasMissedDay = !!missedDay && !!recoveryTimeLeft
+  const hasMissedDay = !!missedDay && !!recoveryTimeLeft && !repaired
 
   // Count-up animations
   const streakCount  = useCountUp(streak.current, 0.55, 1.1)
@@ -439,9 +497,9 @@ export default function DashboardPage() {
     chainDays.push({ day: chainDays.length + 1, status: 'upcoming' as CellStatus, task: null })
   }
 
-  // Chain window for ProofCard — 7 links centred on today's task day
-  const todayNum      = todayTask?.day ?? 1
-  const pcStart       = Math.max(1, todayNum - 3)
+  // Chain window for ProofCard — 7 links centred on active day
+  const activeNum     = repaired ? 5 : (todayTask?.day ?? 1)
+  const pcStart       = Math.max(1, activeNum - 3)
   const pcEnd         = Math.min(60, pcStart + 6)
   const proofChainWindow = Array.from({ length: pcEnd - pcStart + 1 }, (_, i) => {
     const d     = pcStart + i
@@ -464,6 +522,9 @@ export default function DashboardPage() {
     setShowRepair(false)
     setReqOpen(true)
     setTodaySubmitted(false)
+    setRepaired(false)
+    setRepairGithub('')
+    setRepairLinkedin('')
     sessionStorage.setItem('abtalks_demo_state', demoState)
   }, [demoState])
 
@@ -474,7 +535,7 @@ export default function DashboardPage() {
       {/* ── RECOVERY BANNER (missed day state) ────────────────────────────── */}
       {missedDay && (
         <div className="pt-16">
-          <RecoveryBanner day={missedDay} onRepairClick={handleRepairClick} />
+          <RecoveryBanner day={missedDay} onRepairClick={handleRepairClick} repaired={repaired} />
         </div>
       )}
 
@@ -627,7 +688,11 @@ export default function DashboardPage() {
                   </h3>
                   <p className="font-body text-ash mt-2" style={{ fontSize: 13 }}>{missedDay.briefSummary}</p>
                   <div className="my-4 h-px" style={{ background: 'rgba(239,68,68,0.2)' }} />
-                  <RecoveryForm day={missedDay} />
+                  <RecoveryForm day={missedDay} onSuccess={(gh, li) => {
+                    setRepaired(true)
+                    setRepairGithub(gh)
+                    setRepairLinkedin(li)
+                  }} />
                 </div>
               </motion.div>
             )}
@@ -735,7 +800,18 @@ export default function DashboardPage() {
             </motion.div>
           )}
 
-          {/* ProofCard — slides in after successful submission */}
+          {/* ProofCard — slides in after successful submission or repair */}
+          {repaired && missedDay && (
+            <ProofCard
+              dayNumber={missedDay.day}
+              dayTitle={`${missedDay.title} (Recovered)`}
+              studentName={student.name}
+              trackLabel={student.trackLabel}
+              streakCount={streak.current}
+              chainWindow={proofChainWindow}
+            />
+          )}
+
           {todaySubmitted && todayTask && (
             <ProofCard
               dayNumber={todayTask.day}

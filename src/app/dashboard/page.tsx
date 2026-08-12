@@ -53,7 +53,7 @@ function useCountdown(deadline: string | undefined): string | null {
   const calc = (): string | null => {
     if (!deadline) return null
     const diff = new Date(deadline).getTime() - Date.now()
-    if (diff <= 0) return null
+    if (diff <= 0) return '00h 00m 00s'
     const h = Math.floor(diff / 3600000)
     const m = Math.floor((diff % 3600000) / 60000)
     const s = Math.floor((diff % 60000) / 1000)
@@ -425,20 +425,29 @@ export default function DashboardPage() {
   const [repairLinkedin, setRepairLinkedin] = useState('')
   const repairRef = { current: null as HTMLDivElement | null }
 
-  // Dynamic 24h per-session recovery deadline for Missed Day profile
+  // Dynamic 24h per-session recovery deadline for Missed Day profile — continuously auto-refreshes if expired
   const [missedDeadline, setMissedDeadline] = useState<string | undefined>(undefined)
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      let start = localStorage.getItem('abtalks_missed_timer_start')
-      if (!start) {
-        start = Date.now().toString()
-        localStorage.setItem('abtalks_missed_timer_start', start)
+    const updateDeadline = () => {
+      if (typeof window !== 'undefined') {
+        let start = localStorage.getItem('abtalks_missed_timer_start')
+        const now = Date.now()
+        const DAY_MS = 24 * 60 * 60 * 1000
+
+        if (!start || now - parseInt(start, 10) >= DAY_MS) {
+          start = now.toString()
+          localStorage.setItem('abtalks_missed_timer_start', start)
+        }
+        const startTime = parseInt(start, 10)
+        const targetTime = startTime + DAY_MS
+        setMissedDeadline(new Date(targetTime).toISOString())
       }
-      const startTime = parseInt(start, 10)
-      const targetTime = startTime + 24 * 60 * 60 * 1000
-      setMissedDeadline(new Date(targetTime).toISOString())
     }
+
+    updateDeadline()
+    const interval = setInterval(updateDeadline, 1000)
+    return () => clearInterval(interval)
   }, [])
 
   // Data source — switches with demo state

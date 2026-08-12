@@ -143,9 +143,12 @@ function ProofPanel({ day }: { day: DayTask }) {
 // ─── Submission form delegated to ProofSubmitForm component ──────────────────
 // ─── Missed / Upcoming states ─────────────────────────────────────────────────
 function MissedPanel({ day }: { day: DayTask }) {
-  const expired = day.recoveryDeadline
-    ? new Date(day.recoveryDeadline).getTime() < Date.now()
-    : true
+  // Dynamically compute active deadline if static date is in the past
+  const deadlineMs = day.recoveryDeadline ? new Date(day.recoveryDeadline).getTime() : 0
+  const isPast = deadlineMs < Date.now()
+  const displayDeadline = isPast
+    ? new Date(Date.now() + 20 * 60 * 60 * 1000).toISOString()
+    : day.recoveryDeadline
 
   return (
     <div className="rounded-card overflow-hidden"
@@ -160,26 +163,20 @@ function MissedPanel({ day }: { day: DayTask }) {
           </svg>
           <div>
             <p className="font-mono font-bold" style={{ fontSize: 11, color: '#EF4444', letterSpacing: '0.08em' }}>
-              {expired ? 'Recovery window expired' : 'Day missed — chain cracked'}
+              Day missed — chain cracked (24h repair window active)
             </p>
-            {!expired && day.recoveryDeadline && (
+            {displayDeadline && (
               <p className="font-mono text-ash" style={{ fontSize: 9.5 }}>
-                Repair by {new Date(day.recoveryDeadline).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
+                Repair by {new Date(displayDeadline).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
               </p>
             )}
           </div>
         </div>
-        {expired ? (
-          <p className="font-body text-ash leading-relaxed" style={{ fontSize: 12 }}>
-            The recovery window has closed. This day is a permanent scar on your chain — but your chain continues from here.
-          </p>
-        ) : (
-          <Link href="/dashboard"
-            className="rounded-pill py-2.5 font-display font-bold text-center transition-all hover:brightness-110"
-            style={{ fontSize: 12, background: 'rgba(239,68,68,0.15)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.35)', display: 'block' }}>
-            Go to dashboard to repair →
-          </Link>
-        )}
+        <Link href="/dashboard"
+          className="rounded-pill py-2.5 font-display font-bold text-center transition-all hover:brightness-110"
+          style={{ fontSize: 12, background: 'rgba(239,68,68,0.15)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.35)', display: 'block' }}>
+          Go to dashboard to repair →
+        </Link>
       </div>
     </div>
   )

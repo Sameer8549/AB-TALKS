@@ -403,6 +403,15 @@ This document serves as the **Authenticity & AI Assistance Log** for Stage 2 Hac
 * **Verification**: Selected New Student demo profile, submitted GitHub & LinkedIn links for Day 1, verified streak updated to 1, "First Link" unlocked, and ProofCard generator rendered.
 * **Commit**: `feat: interactive submission and first link achievement unlock for new student profile`
 
+#### 43. Continuous Auto-Refreshing 24-Hour Recovery Grace Timer
+* **Date/Time**: Aug 12, 2026, 1:34 PM IST (`13:34:26`)
+* **What was asked**: Ensure the repair window never expires for judges and continuously runs, auto-refreshing if expired.
+* **AI Output Used**: Dynamic timestamp recalculation loop & graceful countdown formatting.
+* **Manual Review / Changes**: Updated `DashboardPage` initialization effect with an interval loop that checks for expiration and auto-resets the window to a fresh 24 hours, ensuring the Missed Day profile (Rahul Nair) always has an active 24h recovery timer running. Also updated `MissedPanel` on day detail route.
+* **Files Affected**: `src/app/dashboard/page.tsx`, `src/app/day/[id]/page.tsx`, `PROMPTS.md`
+* **Verification**: Loaded Missed Day profile on Aug 12, verified timer automatically recalculated to a live 23h 59m active countdown with functioning repair button.
+* **Commit**: `fix: continuous auto-refreshing 24h repair window for missed profile`
+
 ---
 
 ## 📊 Summary of AI vs. Human Contribution
